@@ -37,6 +37,8 @@ example
 
 Xsession is a shell script which source the xprofile and ... etc.
 
+https://wiki.archlinux.org/index.php/xprofile
+
 im-config tool
 --------------
 im-config package installs a hook script ``/etc/X11/Xsession.d/70im-config_launch``.
