@@ -1,0 +1,50 @@
+Firewall
+  - screened host, bastion host, DMZ
+
+- Bastion Host
+  - critical strong point of network security.
+  - usually: firewall, router, proxy ... etc. 
+  - a great deal of effort must be put into designing and configuring bastion hosts 
+    - minimize the chances of penetration.
+
+- placement
+  - 1 firewall: Bastion host is placed outside the firewall
+  - 2 firewalls: between outside firewall and inside firewall, in DMZ.
+  
+- Security
+  - keep it simple
+    - Minimum OS, especially rebuild kernel, kernel security patches.
+    - Disable or remove any unneeded services or daemons, closing unneed ports.
+    - Disable or remove any unneeded user accounts.
+    - Disable or remove any unneeded network protocols.
+  - security patch of packages, checksum all files.
+  - logging, and can use encryption for logging.
+  - read-only file system if you can.
+  - run IDS(intrusion detection system)
+
+- Hardware
+  - less power(CPU?) less attack, but compression and search need power
+  - memory for keeping tcp connection
+  - cache proxy need large disk
+
+- other keyword for searching
+  - inetd + TCP wrapper(tcpd, netacl)
+    - http://www.l-penguin.idv.tw/article/tcpwrapper.htm
+  - security audit, like COP, Tiger, Tripwire
+  - monitoring: SWATCH
+
+reference
+---------
+- http://www.wikiwand.com/en/Bastion_host
+- http://www.wikiwand.com/en/DMZ_(computing)
+- Configure Linux As Bastion Host: http://www.cyberciti.biz/faq/linux-bastion-host/
+- Book
+  - Building Firewalls with OpenBSD and PF: ch2.5 Firewall Great and Small
+    - https://books.google.com.tw/books?id=MWg3kjhKPsUC&pg=PA20
+  - O'Reilly Building Internet Firewalls: ch5 Bastion Hosts
+    - http://www.diablotin.com/librairie/networking/firewall/index.htm
+  - Designing and Building Enterprise DMZs
+    - 3 part: DMZ, Firewall design, Bastion Host.
+    - https://books.google.com.tw/books?isbn=0080504000
+
+

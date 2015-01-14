@@ -1,0 +1,23 @@
+- outcoming (internel to external)
+
+  1. 從同一個 internal IP 的同 port 發出的連線, source 皆被 redirect 到 NAT server 的同一個 port 上.
+  2. 每個不同的 connection, 即使同 source IP/port 發出, source 被 redirect 到 NAT server 的不同 port 上.
+
+- incoming (external to internal)
+
+  NAT 到 internal 的 redirect session 建立
+
+  1. 所有 ip/port 發 packet 到 NAT server 的 port 皆會被 redirect 到 internal
+  2. 只有 redirect session 建立時的 external ip 發 packet 到 NAT server 的 port 才會被 redirect 到 internal
+  3. 只有 redirect session 建立時的 external ip/port 發 packet 到 NAT server 的 port 才會被 redirect 到 internal
+
+outcoming 1, incoming 1/2/3 分別為 Full Cone NAT, Restricted NAT, Port Restricted NAT.
+outcoming 2, incoming 2 則為 Symmetric NAT
+
+NAT 穿透
+--------
+udp hole punching
++++++++++++++++++
+Q: 如果 redirection 會限定外網 ip/port 怎麼辦?
+A: internal 多發幾個 udp packet 給需要的外網 ip/port, 這些 ip/port 也就會被一起 redirection 了.
+
