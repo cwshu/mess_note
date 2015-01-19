@@ -1,0 +1,12 @@
+- server (ex. http)
+  - 測試環境, 從何資料夾讀資料 (chdir 進入)
+  - testing script, testing data 的 path.
+
+- 案例
+  - 應該在何資料夾執行 httpd 測試? 
+
+  - 相對路徑開始為 project dir
+  - 編完的 httpd 在 test_build/httpd
+  - request_html.http 在 testing/
+    - ``cat request_html.http | nc ip port`` for testing
+  - 被 request 的檔案在 ./
