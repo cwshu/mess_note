@@ -1,0 +1,14 @@
+~/.vimrc
+~/.vim/filetype.vim
+~/.vim/ftplugin/
+~/.vim/syntax/
+
+# Vundle
+# if vimrc setting
+#    call vundle#begin('~/.vim/bundle/')
+# then all plugin install at
+~/.vim/bundle/$plugin_name/
+
+# and Vundle set runtimepath='~/.vim/bundle/$plugin_name/'
+# load plugin script at
+~/.vim/bundle/$plugin_name/**/*.vim
