@@ -54,3 +54,7 @@ https://vmware-partnerpedia-shared.s3.amazonaws.com/documents/Virtual_Appliance_
   - VM Disk
     - only a disk of one VM, not containing CPU/Memory/Network message of VM.
     - one VM can have many disk, more than one.
+
+實際 data
+---------
+Ubuntu 12.04 JeOS: 55 MB (原 740 MB)
