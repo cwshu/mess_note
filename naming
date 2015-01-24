@@ -1,0 +1,34 @@
+這問題很有意思，命名(Naming)問題也常常佔掉我很多寫 code 時間，分享一點我自己的想法。
+---
+多英文字變數(multiple word identifiers)
+
+先回答大小寫型式的問題，常常一個變數名稱會用多個英文單字組成，比如上面朋友提到的 user name。為了分別單字的分割點，常有的手法有兩個，一是全小寫中間用底線(_)隔開，二是每個單字的第一個字母大寫其他小寫。
+前者稱為 underscore，後者稱為 CamelCase 。
+其中 CamelCase 又根據第一個字母要不要大寫分成 CamelCase 跟 camelCase。
+underscore 的變體則是全部英文字大寫用底線(_)隔開，常常用在全域的常數 (如貪食蛇遊戲的地圖大小，buffer size 的上限)
+
+ex. set nonblocking flags
+CamelCase: SetNonblockingFlags
+camelCase: setNonblockingFlags
+underscore: set_nonblocking_flags
+大寫 underscore: SET_NONBLOCKING_FLAGS
+
+CamelCase 跟 underscore 各有優缺，
+前者怕英文字有縮寫, 如 HTTP, CIDR(class-less interdomain routing). 
+後者怕英文字有 dash (dash 在變數名稱通常只能用底線表示).
+個人覺得看喜好使用. 不過一個 project 內請一致!!
+---
+命名法綜合使用
+
+1. 這些命名法，最簡單的使用方式是所有變數都用同一種 (CamelCase or underscore).
+2. 稍微進階是，根據變數的類型使用不同種類，比如說全域常數固定用 "大寫 underscore"，這樣根據命名方式就可以直接看出這個變數是哪一類的變數。(ex. "大寫 underscore" => 全域常數)
+
+變數種類跟命名法的 matching, 這方面的 coding style, 因為個人喜好, 我參考 Python 官方的 PEP8, 修改成 C/C++ 使用的版本.
+- type(class/struct/enum): CamelCase
+- 全域常數(#define/const): 大寫 underscore
+- 剩餘(variable/function/method/namespace): underscore 
+C/C++ 原生相信也有很多好的 coding style 可以參考(GNU/BSD/Google 應該都有 coding stanard/guideline 之類的東西),
+--
+最重要的是 multiple word identifier 請至少挑一種命名法用, 不然容易誤會.
+其次是一個 project 要儘量統一命名法的 style, 如果不一致, 種類跟命名法的 matching 就沒意義了.
+剩下各種 命名法/coding style 的優缺我覺得都是影響比較小的細節.
