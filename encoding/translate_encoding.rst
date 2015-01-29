@@ -10,3 +10,9 @@ ex.::
 
     convmv -f cp936 -t utf8 -r XXX/
     convmv -f cp936 -t utf8 -notest -r XXX/
+
+
+- reference
+
+https://allencch.wordpress.com/2013/04/15/extracting-files-from-zip-which-contains-non-utf8-filename-in-linux/
+http://www.robberphex.com/2013/05/141
