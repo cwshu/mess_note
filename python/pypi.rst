@@ -42,3 +42,7 @@ Misc
 
   - requirement.txt
   - pip freeze
+
+- virtualenv and real OS-level virtualization(container)
+
+  - `Why I hate virtualenv and pip <https://pythonrants.wordpress.com/2013/12/06/why-i-hate-virtualenv-and-pip/>`_
