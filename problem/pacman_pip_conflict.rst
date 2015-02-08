@@ -1,4 +1,5 @@
 今天用 yaourt 裝 aur/nemo-dropbox 時, 發現 nemo-dropbox 依賴 python2-docutil
+
 可是 python2-docutil 已經在我裝 rst2pdf 時, 用 pip 安裝好了, 所以 yaourt 無法安裝.
 
 解法有兩個, 參考 http://www.douban.com/group/topic/34442515/
