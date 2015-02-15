@@ -68,6 +68,22 @@ image and container
 
   - docker run -t -i base/archlinux bash (拿到一個 bash)
 
+more
+++++
+- docker run -d # daemon
+- docker logs <CONTAINER_NAME>
+- docker stop <CONTAINER_NAME>
+- docker runn [-P|-p] # port forwarding
+
+  - -P # all exposed port
+  - -p <HOST_PORT>:<CONTAINER_PORT> # specific port
+
+version control
++++++++++++++++
+- docker diff <CONTAINER_ID>|<CONTAINER_NAME> # git status
+- docker history <IMAGE> # git log
+- docker commit/push/pull
+
 概念
 ----
 - daemon?
@@ -75,6 +91,11 @@ image and container
 - dockerhub: docker 版的 github, 有 version control 的功能後有這個也不意外.
 - 後端1: pid 的 namespace 機制, container 跟外部 OS 的 pid 獨立. (process id)
 - 後端2: control group, 限制每個 container 的資源使用.
+
+- `docker 原理簡介 <http://blog.blackwhite.tw/2013/12/docker.html>`_
+  
+  - kernel namespace(pid, mount, network, user, ipc, uts)
+  - lxc + aufs
 
 dockerfile
 ----------
@@ -91,9 +112,18 @@ ex::
 reference
 ---------
 - `Docker official website 10 mins tutorial - try it <https://www.docker.com/tryit/>`_
-- `docker 原理簡介 <http://blog.blackwhite.tw/2013/12/docker.html>`_
 - `Introduction to Docker (這篇比較偏向 docker 的使用方式) <http://hungmingwu-blog.logdown.com/posts/196996-introduction-to-docker>`_
 
 - `Docker Getting Start: Related Knowledge <http://tiewei.github.io/cloud/Docker-Getting-Start/>`_
 - `小心暗藏惡意軟件：淺談 Docker 安全性 <http://www.hkitblog.com/?p=22552>`_
 - `Docker 中文指南 <http://www.widuu.com/chinese_docker/>`_
+
+More
+----
+- run gui apps
+  
+  - http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/
+
+- thinking: chroot, lxc, and docker (and other containers: OpenVZ, jails, zone)
+
+  - `What does Docker add to just plain LXC? <https://docs.docker.com/faq/#what-does-docker-add-to-just-plain-lxc>`_
