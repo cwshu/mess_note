@@ -1,0 +1,4 @@
+- lshw
+- lspci
+- lsusb
+- cat /proc/cpuinfo
