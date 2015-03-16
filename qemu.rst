@@ -1,6 +1,7 @@
 qemu -enable-kvm -hda <image> -vga std -cpu host -smp 2 -m 512MB \
 -net nic,vlan=0 \
--net user,hostfwd=tcp:127.0.0.1:50022-:22
+-net user,hostfwd=tcp:127.0.0.1:50022-:22 \
+-monitor telnet:0.0.0.0:60023,server,nowait 
 
 network
 -------
@@ -19,6 +20,10 @@ redirection example::
 monitor mode
 ------------
 control the running VM.
+
+- redirect monitor to host OS tcp socket::
+
+  -monitor telnet:0.0.0.0:60023,server,nowait # qemu command line option
 
 http://wiki.qemu.org/download/qemu-doc.html#pcsys_005fmonitor
 http://en.wikibooks.org/wiki/QEMU/Monitor#Devices
