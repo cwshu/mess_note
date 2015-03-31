@@ -1,8 +1,10 @@
 Device IO
 ---------
 cpu 跟 Device 進行 IO, 常見的手法有 2 種,
-一是 memory mapped IO, 把 buffer 對應到某段 memory space 上, 對 memory 的讀寫同步到對 device 的讀寫.
-一是 port mapped IO, 把 buffer 對應到某段 IO space 上, cpu 會使用特殊(非 memory 讀寫的 instruction)的 instruction 去讀寫 IO space, 並同步到 device 的讀寫. 特殊的 instruction 如 x86 的 in/out instruction.
+
+一種是 memory mapped IO, 把 buffer 對應到某段 memory space 上, 對 memory 的讀寫同步到對 device 的讀寫.
+
+另一種是 port mapped IO, 把 buffer 對應到某段 IO space 上, cpu 會使用特殊(非 memory 讀寫的 instruction)的 instruction 去讀寫 IO space, 並同步到 device 的讀寫. 特殊的 instruction 如 x86 的 in/out instruction.
 
 
 IO space
@@ -36,8 +38,9 @@ IO map on linux
 Region 0/2 為 memory mapped IO, mapping 到 memory space 的 f6400000 ~ f6401000 (4M) 跟 d0000000 ~ d0040000.
 Region 4 為 port mapped IO, mapping 到 IO space 的 f000 ~ f03F (64B).
 
-x86 in/out instruction
+x86(32bits) in/out instruction
 ----------------------
 ``OUT`` instruction format 的連結: http://x86.renejeschke.de/html/file_module_x86_id_222.html
+
 從 ``OUT`` instruction, 基本上可以看出 IO space 應該是 16bits(65536) 的大小, 該 instruction 能讓 cpu 一次 IO 一個 register 的值 (最多 32 bits)
 
