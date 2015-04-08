@@ -17,6 +17,8 @@ redirection example::
     # host(127.0.0.1):2522 -> guest:22
     # hostfwd=[<host_ip>]:<host_port>-[<guest_ip>]:<guest_port>
 
+[not reading] https://people.gnome.org/~markmc/qemu-networking.html
+
 monitor mode
 ------------
 control the running VM.
@@ -35,3 +37,14 @@ examples::
     hostfwd_add tcp:127.0.0.1:8000-:8000
 
 monitor mode 下的 ``hostfwd_add tcp:127.0.0.1:8000-:8000`` command 似乎無效, 待尋找原因.
+
+related tool
+------------
+qemu-img
+++++++++
+qemu-img [command] [options]
+
+-f [fmt] # fmt=format: raw | qcow2 ... etc
+ex::
+
+    qemu-img create -f raw xxx.img 1G
