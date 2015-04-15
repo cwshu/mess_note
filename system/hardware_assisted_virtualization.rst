@@ -1,3 +1,16 @@
+virtualization basic
+--------------------
+- Virtualization Theory (Formal Requirements for Virtualizable Third Generation Architecture (1974))
+
+  - sensitive instruction
+
+    - mode referencing instruction
+    - sensitive register/memory access instruction
+    - storage protection system referencing instruction
+    - all I/O instruction (guess: memory-mapped + port-mapped I/O)
+
+  - privileged instruction
+
 intel VT series
 ---------------
 - intel VT-x and VT-i: VT for x86 and itanium(IA 64)
