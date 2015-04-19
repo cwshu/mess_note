@@ -44,6 +44,18 @@ libmp3lame 是一套名為 lame 的 mp3 encoder, 因為 ffmpeg 本身不含 mp3 
 
 qscale 是使用 VBR encoding, 2 代表品質 (0 ~ 9, 越小越好), 詳見 ffmpeg MP3 encoding quide.
 
+
+ffmpeg concat audio
+-------------------
+``ffmpeg -f concat -i <list_file> -c copy <output_file>``
+list_file format::
+
+    file '01.mp3'
+    file '02.mp3'
+    ...
+
+https://trac.ffmpeg.org/wiki/Concatenate
+
 reference
 ---------
 ffmpeg user manual: http://ffmpeg.org/ffmpeg.html
