@@ -30,7 +30,7 @@ intel VT series
   
       DMA 發出的中斷為 MSI(message signaled interrupt), MSI 中要含有 device 的 memory address.
       如果要虛擬化, DMA 就要可以 access host + all vm 的 memory address, 隔離效果不好.
-      - interrupt remapping: MSI 改成放 message id, maintain 一個 message id to VM 區域的 table
+      解法: interrupt remapping: MSI 改成放 message id, 維護一個 message id to VM 區域的 table
 
 - More
 

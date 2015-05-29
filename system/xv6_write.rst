@@ -3,7 +3,6 @@ tracing xv6 write system call
 - xv6 source code(pdf): http://pdos.csail.mit.edu/6.828/2014/xv6/xv6-rev8.pdf
 - xv6 source code(github): https://github.com/guilleiguaran/xv6
 
-
 ::
     
     # structure, global variable
@@ -27,8 +26,10 @@ tracing xv6 write system call
       - devsw[CONSOLE].write() => consolewrite()
     int consolewrite(struct inode *ip, char *buf, int n) in console.c:266
     void consputc(int c) in console.c:161
-    void uartputc(int c) in uart.c:52
-    static void cgaputc(int c) in console.c:130
-
+      - void uartputc(int c) in uart.c:52
+      - static void cgaputc(int c) in console.c:130 
+    
     uartputc => x86 asm: OUT COM1 data
     cgaputc => x86 asm: OUT CRTPORT data
+    
+    # about OUT instruction: http://x86.renejeschke.de/html/file_module_x86_id_222.html

@@ -2,17 +2,16 @@ kvm
 ---
 - cpu 
 
-vm => regular linux process, scheduled by standard linux scheduler
-more precisely, each vcpu appear as single linux process.
+  vm => regular linux process, scheduled by standard linux scheduler
+  more precisely, each vcpu appear as single linux process.
 
 - security
 
-SVirt: SELinux and kvm virtualization
+  SVirt: SELinux and kvm virtualization
 
 - memory management
 
-  - Intel Extended Page Table(EPT)
-  - AMD Rapid Virtualization Indexing
+  - [Intel] Extended Page Table(EPT) & [AMD] Rapid Virtualization Indexing
   - kernel feature: Kernel Same-page Merging (KSM)
 
     - 把 VM 間的 same memory page merge 到同一個 physical page, 用於節省 memory, 同時開啟更多 VM.
