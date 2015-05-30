@@ -92,8 +92,8 @@ extern usage in header file
 
 而事實上, header file 裡的變數基本上只會有 extern variable.
 
-example in standard library
-"""""""""""""""""""""""""""
+extern variable example in library
+""""""""""""""""""""""""""""""""""
 - stdin, stdout, stderr
 - errno
 
@@ -101,7 +101,7 @@ extern variable in function
 """""""""""""""""""""""""""
 如果在 function 中使用 extern 引用變數, scope 會跟區域變數一樣只在 function 的範圍內.
 
-.. code: c
+.. code:: cpp
 
     // main.c 
     int foo(){
@@ -128,6 +128,12 @@ static variable
 
 那如果 library 不想把這個變數給其他檔案 access 怎麼辦, 加上 ``static`` 就可以讓變數無法被外部檔案看到, 無法被連接(linkage).
 
+static variable example in library
+""""""""""""""""""""""""""""""""""
+- lifetime 全開的 variable in function
+
+  - strtok
+
 extern and static function
 --------------------------
 當需要使用外部檔案的 function 時, 需宣告該 function 的 type, 通常稱為 function prototype.
@@ -138,6 +144,36 @@ extern and static function
 
 1. 將 function prototype 也放在 header file 的原因顯而易見.
 2. 不想讓外部使用某 function, 即在 function definition 前面加上 static.
+
+static function example in library
+""""""""""""""""""""""""""""""""""
+常用情況: library inner function
+
+- `3rd party library - argparse<https://github.com/Cofyc/argparse>`_
+
+    - string prefix comparsing function used in library inner part.
+
+.. code:: cpp
+
+    // argparse.c
+    static const char *
+    prefix_skip(const char *str, const char *prefix)
+    {
+        size_t len = strlen(prefix);
+        return strncmp(str, prefix, len) ? NULL : str + len;
+    }
+ 
+    static int
+    prefix_cmp(const char *str, const char *prefix)
+    {
+        for (;; str++, prefix++)
+            if (!*prefix)
+                return 0;
+            else if (*str != *prefix)
+                return (unsigned char)*prefix - (unsigned char)*str;
+    }
+
+    // two functions are not in argparse.h
 
 總結
 ----
