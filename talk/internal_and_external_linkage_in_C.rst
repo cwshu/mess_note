@@ -11,9 +11,9 @@ C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 
 
 由於 source code 轉換的最重要階段 compiling 時, 無法看到你使用的其他 c source code 跟外部 library 的 source code 及 binary,
 
-所以 C 語言需要在每個 c source file 裡, 標注每個使用到的內部或外部 variable 跟 function 的 type, 才能在 compiling 階段進行 type checking. 
+所以 C 語言需要在每個 c source file 裡, 標注每個使用到的內外部的變數與函式的型別(type), 才能在 compiling 階段進行 type checking. 
 
-也就是說, C 語言中所有的 variable 跟 function, 在使用前都要有完整的定義, 或者有僅包含 type 的宣告.
+也就是說, C 語言中所有的變數跟 function, 在使用前都要有完整的定義(definition), 或者有僅包含型別(type)的宣告(declaration).
 
 也正是因為如此, C 語言甚至要使用 header file 跟額外的 preprocessor, 來幫助使用外部的 c source code 跟 library.
 
@@ -24,12 +24,11 @@ C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 
    more: 待補 url
 2. header file 不會被單獨 compile, header file 只會被 ``#include`` 貼入到其他 c source code 裡, 跟 c source code 一起被 compile 成 object code.
 
-
 extern variable
 ---------------
 (名詞解釋: 這邊的外部檔案指的是除了自己以外其他的 c source codes, libraries)
 
-當需要使用外部檔案的 variable 時, 需強制宣告該 variable 為 ``extern`` 並且寫上該 variable 的型態.
+當需要使用外部檔案的變數時, 需強制宣告該變數為 ``extern`` 並且寫上該變數的型態.
 
 example
 
@@ -37,12 +36,14 @@ example
 
     /* foo.c */
     int a = 10;
+
+    /* main.c */
+    extern int a;
+
     void print_a(void){
         printf("a = %d\n", &a);
     }
 
-    /* main.c */
-    extern int a;
     int main(){
         print_a(); // a = 10
         a++;
@@ -77,12 +78,14 @@ extern usage in header file
 
     /* foo.c */
     int a = 10;
+
+    /* main.c */
+    #include "foo.h"
+
     void print_a(void){
         printf("a = %d\n", &a);
     }
 
-    /* main.c */
-    #include "foo.h"
     int main(){
         print_a(); // a = 10
         a++;
@@ -95,12 +98,29 @@ extern usage in header file
 
 extern variable example in library
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- stdin, stdout, stderr
-- errno
+- ``stdin, stdout, stderr``
+- old implementation of ``errno`` (without considering multithreading)
+
+.. code:: cpp
+
+    // /usr/bin/stdio.h
+    /* Standard streams.  */
+    extern struct _IO_FILE *stdin;		/* Standard input stream.  */
+    extern struct _IO_FILE *stdout;		/* Standard output stream.  */
+    extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
+    /* C89/C99 say they're macros.  Make them happy.  */
+    #define stdin stdin
+    #define stdout stdout
+    #define stderr stderr
+
+    // /usr/bin/errno.h
+    #ifndef errno
+    extern int errno;
+    #endif
 
 extern variable in function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-如果在 function 中使用 extern 引用變數, scope 會跟區域變數一樣只在 function 的範圍內.
+如果在函式中使用 extern 引用變數, scope 會跟區域變數一樣只在函式的範圍內.
 
 .. code:: cpp
 
@@ -119,8 +139,8 @@ static variable
 ---------------
 在 C 語言裡, static 主要有兩個效果
 
-1. 對 function 內的 variable 用 static 修飾: lifetime 擴展為整個程式的執行期間, 與全域變數的 lifetime 相同.
-2. 對全域的 variable 用 static 修飾: variable 不可被外部引用(連接: link), 也不汙染其他檔案的 namespace(symbol table in C). 也就是內部連結(internal linkage)的效果.
+1. 對函式內的變數用 static 修飾: lifetime 擴展為整個程式的執行期間, 與全域變數的 lifetime 相同, 整個程式期間只存在一個本體, 不像區域變數每個函式有一個本體.
+2. 對全域變數用 static 修飾: 變數不可被外部引用(連接: link), 也不汙染其他檔案的 namespace(symbol table in C). 也就是內部連結(internal linkage)的效果.
 
 接下來一一解釋兩個效果.
 
@@ -132,32 +152,60 @@ static: internal linkage
 
 static variable in function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-static variable example in library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - static variable in function, 使用效果是可以做出有狀態 (stateful) 的 function.
 
   - example: strtok
-
-  - supplement: lifetime 全開, 背後隱含該變數跟全域變數一樣, 程式執行前就被創造. static 變數只有一份, 不會像區域變數一樣, 每次 function call 都被重新創造, 當進入 multithread 環境下時, function 可能被同時作 2 次 function call, 就有可能會碰到問題.
+  - 延伸思考: static variable in function 對 multithreading 的影響.
   
 extern and static function
 --------------------------
-當需要使用外部檔案的 function 時, 需宣告該 function 的 type, 通常稱為 function prototype. 
+當需要使用外部檔案的函式時, 需宣告該函式的 type, 通常稱為 function prototype. 
 
-跟 variable 不同的是, function prototype 可加可不加 ``extern``.  
+跟變數不同的是, function prototype 可加可不加 ``extern``.  
 
 而將 function prototype 也放在 header file 的原因跟 extern variable 一樣.
 
-static function 的效果跟 static global variable 一樣, 也是將 scope 縮小為檔案內. 不能被外部檔案 function call.
+static function 的效果跟 static 的全域變數一樣, 讓函式不可被外部引用.
 
-static function example in library
+extern and static function example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-常用情況: library 內部 function
+- simple example
 
-- `3rd party library - argparse <https://github.com/Cofyc/argparse>`_
+    - fabonacci library, 提供 fabonacci 函式使用.
+    - fabonacci library 中需使用內部函式 add 的功能.
 
-    - string prefix comparsing function used in library inner part.
+.. code:: cpp
+
+    /* fabonacci.h */
+    int fabonacci(int n);
+    // extern int fabonacci(int n); // this is still ok.
+
+    /* fabonacci.c */
+    static int add(int a, int b);
+
+    int fabonacci(int n){
+        if(n == 0)
+            return 0;
+        return add(fabonacci(n-1) + fabonacci(n-2));
+    }
+
+    static int add(int a, int b){
+        return a+b;
+    }
+
+    /* main.c */
+    #include "fabonacci.h"
+
+    int main(){
+        printf("f(10) = %d\n", fabonacci(10));
+        return 0;
+    }
+
+- more complex example
+
+    - `3rd party library - argparse <https://github.com/Cofyc/argparse>`_
+    - 提供設定 command line option 的函式跟結構(struct).
+    - 內部函式 ``prefix_cmp``, ``prefix_skip``. 檢查是否為 prefix string.
 
 .. code:: cpp
 
@@ -183,75 +231,132 @@ static function example in library
 
 conflict of inline function and external linkage
 ------------------------------------------------
+在講解前, 要先說明一下 function call 在執行檔的樣貌.
 
-static inline v.s. extern inline
---------------------------------
+以下 code 是一個簡單的函式 ``add``, 在 x86_64 組語下的樣貌. 
+
+(C code 是註解, 僅表示哪些 C code 被轉成該組語, 為了方便辨認, 在 C code 前加上 ``[C]`` 方便辨識.
+
+.. code:: asm
+
+    00000000004005d1 <add>:
+ [C]int add(int a, int b){
+      4005d1:       55                      push   %rbp
+      4005d2:       48 89 e5                mov    %rsp,%rbp
+      4005d5:       89 7d fc                mov    %edi,-0x4(%rbp)
+      4005d8:       89 75 f8                mov    %esi,-0x8(%rbp)
+ [C]    return a+b;
+      4005db:       8b 55 fc                mov    -0x4(%rbp),%edx
+      4005de:       8b 45 f8                mov    -0x8(%rbp),%eax
+      4005e1:       01 d0                   add    %edx,%eax
+ [C]}
+      4005e3:       5d                      pop    %rbp
+      4005e4:       c3                      retq   
+
+每個組語的 instruction 分成三部份.
+
+1. 該 instruction 存在的 memory address. 如 ``4005d1:``
+2. instruction 的 binary encoded form, machine code 真實存在執行檔的狀態. 如 ``55``
+3. instruction 的 binary encoded form 被反組譯回來的組語. 如 ``push   %rbp``
+
+函式的本體, 就是函式實作轉換成的 instructions, 結尾為 return 相關的 instruction.
+
+而函式的名稱也只是這串 instructions 的 start address, 可以用 function call 相關的 instruction 跳到這個 address.
+
+如下 code 即為 ``x = add(a, b);`` 這行 C source code 轉換成組語的樣貌, 可以看到透過 ``callq`` 跳到 add 函式(4005d1)
+
+.. code:: asm
+
+ [C]       x = add(a, b);
+      40059f:       8b 55 f4                mov    -0xc(%rbp),%edx
+      4005a2:       8b 45 f8                mov    -0x8(%rbp),%eax
+      4005a5:       89 d6                   mov    %edx,%esi
+      4005a7:       89 c7                   mov    %eax,%edi
+      4005a9:       b8 00 00 00 00          mov    $0x0,%eax
+      4005ae:       e8 1e 00 00 00          callq  4005d1 <add>
+      4005b3:       89 45 fc                mov    %eax,-0x4(%rbp)
+
+但 inline function 的效果, 是直接把函式的內容插入到 function call 的地方, 省略 call, return, 跟參數傳遞帶來效能增進.
+
+也因此, 函式如果 inline 化之後, 就不需要存在本體了.
+
+可是函式 inline 化這件事基本上是在 compilation 階段完成的, 只能在檔案內 call 這個函式的地方 inline 化.
+
+如果外部檔案要 function call, 基本上只能正常 call and return, 需要函式的本體, 因此在這個衝突底下, C 語言讓 programmer 使用 static 跟 extern 關鍵字去做設定.
+
+[C99] static inline v.s. extern inline
+--------------------------------------
+static inline 代表 internal linkage, 不給外部檔案使用, 很顯然的也就不需要保留本體.
+
+反之, extern inline 代表 external linkage, 要給外部檔案使用, 必需要保留本體.
+
+不過 ``inline`` 關鍵字是在 C99 在進入 C 標準的, 所以這是 C99 以後的規則, 純 ``inline`` 的效果也留到下一個 section 講.
 
 inline and gnu89 inline
 -----------------------
 
 總結
 ----
-1. 由於 C 的 compilation 流程限制, 每個檔案必須要在 variable 跟 function 使用前加上前綴的 type 宣告.
-2. static 可以將 variable 跟 function 的 scope 縮小為檔案內, extern variable 跟 function prototype 可以讓你引用別的檔案裡沒被 static 的 variable 跟 function.
-3. inline 跟 cross file function call 的衝突.
-4. extern inline 的 extern 被賦與第二種意義, 讓 inline function 可被外部引用.
-5. C 版本導致的差異.
+1. 由於 C 的 compilation 流程限制, 每個檔案必須要在變數跟函式使用前加上前綴的型態宣告.
+2. static 可以將變數跟函式的 scope 縮小為檔案內, extern variable 跟 function prototype 可以讓你引用別的檔案裡沒被 static 化的變數跟函式.
+3. header file 的變數, 絕大部分情況只會有 extern variable.
+4. extern inline 的 extern 被賦與第二種意義, 讓 inline function 可被外部引用. static inline 中的 static 仍為保護函式不可被外部引用.
 
-+----------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
-|                            | C99 internal function | C99 external function   | gnu89 internal function | gnu89 external function |
-+----------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
-| declaration in header file |           X           | inline or extern inline |             X           |                         |
-+----------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
-| forward declaration in c   |     static inline     | inline or extern inline |       static inline     |                         |
-+----------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
-| function definition        |     static inline     |      extern inline      |       static inline     |         inline          |
-+----------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
++--------------------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
+| inline functions                     | C99 internal function | C99 external function   | gnu89 internal function | gnu89 external function |
++--------------------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
+| declaration in header file (``*.h``) |           X           | inline or extern inline |             X           |                         |
++--------------------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
+| forward declaration        (``*.c``) |     static inline     | inline or extern inline |       static inline     |                         |
++--------------------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
+| function definition        (``*.c``) |     static inline     |      extern inline      |       static inline     |         inline          |
++--------------------------------------+-----------------------+-------------------------+-------------------------+-------------------------+
 
 - library 本身
 
-    1. variable/function 希望被外部引用: 在 header file 加上該 variable 的 extern 宣告或 function 的 prototype
-    2. variable/function 可被外部引用: 在 c source file 該變數宣告時, 不加上 static.
-    3. variable/function 不可被外部引用: 在 c source file 該變數宣告時, 加上 static.
+    1. 變數跟函式希望被外部引用: 在 header file 加上 extern variable 或 function prototype
+    2. 變數跟函式可被外部引用: 在 c source file 該變數宣告時, 不加上 static.
+    3. 變數跟函式不可被外部引用: 在 c source file 該變數宣告時, 加上 static.
 
 - 使用 library 的外部檔案
 
     1. 對應上面的 1., header file 有的話, include 後即可使用.
-    2. 對應上面的 2., 需在本檔案中加上 extern variable 或 function prototype 才可使用. 如果沒有 library 的 source code 則無法使用. 因為無法知道 variable/function 型態.
+    2. 對應上面的 2., 需在本檔案中加上 extern variable 或 function prototype 才可使用. 如果沒有 library 的 source code 則無法使用. 因為無法知道變數跟函式的型態.
     3. 對應上面的 3., 在這種情況下無法使用該變數, 不過可以在這個檔案宣告同名變數使用.
 
 .. code:: cpp
 
-    /* just commented */
+    /* just comments */
     /*
      * 1. external linkage, var1/func1
      * 2. can be external linked, var2/func2
      * 3. internal linkage, var3/func3
      */
+
     /* libfoo.h */
     extern int var1; 
 
-    void func1(void); //
+    void func1(void);
 
     /* libfoo.c */
     #include "libfoo.h"
 
-    int var1 = 1; // 1. 
+    int var1 = 1; 
     int var2 = 2; 
-    static int var3 = 2; //
+    static int var3 = 2;
 
     // function forward declaration if needed.
-    void func2(void); // 2.
-    static void func3(void); // 3.
+    void func2(void);
+    static void func3(void);
 
     // function definition
-    void func1(void){ // 1.
+    void func1(void){
         printf("func1\n");
     }
-    void func2(void){ // 2. can be external linked
+    void func2(void){
         printf("func2\n");
     }
-    static void func3(void){ // 3. internal linkage
+    static void func3(void){
         printf("func3\n");
     }
 
