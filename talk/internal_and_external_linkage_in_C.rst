@@ -32,7 +32,7 @@ extern variable
 
 example
 
-.. code:: cpp
+.. code:: c
 
     /* foo.c */
     int a = 10;
@@ -71,7 +71,7 @@ extern usage in header file
 
 以上面的 example 為例的話會直接建立一個 ``foo.h`` 給其他檔案如 ``main.c`` 來使用.
 
-.. code:: cpp
+.. code:: c
 
     /* foo.h */
     extern int a;
@@ -103,7 +103,7 @@ extern variable example in library
 - ``stdin, stdout, stderr``
 - old implementation of ``errno`` (without considering multithreading)
 
-.. code:: cpp
+.. code:: c
 
     // /usr/bin/stdio.h
     /* Standard streams.  */
@@ -124,7 +124,7 @@ extern variable in function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 如果在函式中使用 extern 引用變數, scope 會跟區域變數一樣只在函式的範圍內.
 
-.. code:: cpp
+.. code:: c
 
     // main.c 
     int foo(){
@@ -176,7 +176,7 @@ extern and static function example
     - fabonacci library, 提供 fabonacci 函式使用.
     - fabonacci library 中需使用內部函式 add 的功能.
 
-.. code:: cpp
+.. code:: c
 
     /* fabonacci.h */
     int fabonacci(int n);
@@ -209,7 +209,7 @@ extern and static function example
     - 提供設定 command line option 的函式跟結構(struct).
     - 內部函式 ``prefix_cmp``, ``prefix_skip``. 檢查是否為 prefix string.
 
-.. code:: cpp
+.. code:: c
 
     // argparse.c
     static const char *
@@ -354,7 +354,7 @@ gnu89 v.s. C99
     2. 對應上面的 2., 需在本檔案中加上 extern variable 或 function prototype 才可使用. 如果沒有 library 的 source code 則無法使用. 因為無法知道變數跟函式的型態.
     3. 對應上面的 3., 在這種情況下無法使用該變數, 不過可以在這個檔案宣告同名變數使用.
 
-.. code:: cpp
+.. code:: c
 
     /* just comments */
     /*
