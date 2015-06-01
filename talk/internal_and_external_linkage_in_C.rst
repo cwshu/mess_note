@@ -19,9 +19,9 @@ C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 
 
 補充, 常見疑惑:
 
-1. 所有的 library 本質上都是一種 object code, 包含 static library 跟 dynamic library.
+1. 所有的 library 本質上都跟 object code 一樣由 cpu instructions 組成, 包含 static library 跟 dynamic library.
    除了 dynamic library 的 cpu instructions 要強制符合 relocable(position independent code) 的條件.
-   可參考: `Tsung's Blog - Linux 的 .a / .so / .la 函式庫的差異<http://blog.longwin.com.tw/2013/03/linux-a-so-la-library-diff-2013/>`_
+   可參考: `Tsung's Blog - Linux 的 .a / .so / .la 函式庫的差異 <http://blog.longwin.com.tw/2013/03/linux-a-so-la-library-diff-2013/>`_
 2. header file 不會被單獨 compile, header file 只會被 ``#include`` 貼入到其他 C source code 裡, 跟 C source code 一起被 compile 成 object code.
 
 extern variable
