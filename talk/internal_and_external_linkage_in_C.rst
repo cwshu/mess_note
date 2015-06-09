@@ -13,6 +13,9 @@ C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 
 
     +----------------------------------------------------------------+
     |                                                                |
+    |  source code              object code             executable   |
+    |                                                                |
+    |                                                                |
     | +------------+           +------------+                        |
     | |            |  compile  |            |                        |
     | |   main.c   +----------->   main.o   +-+                      |
