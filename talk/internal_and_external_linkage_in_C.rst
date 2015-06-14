@@ -2,6 +2,8 @@ Internal and External Linkage in C
 ==================================
 副標題: extern/static/inline variable/function
 
+.. contents:: Table of Contents
+
 compiling, linking and forward declaration
 ------------------------------------------
 C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 兩個階段.
