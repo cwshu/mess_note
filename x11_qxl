@@ -1,0 +1,96 @@
+大架構
+------
+1. X11, DRI, and DRM
+
+    - DRM: https://www.wikiwand.com/en/Direct_Rendering_Manager
+    - Linux DRM Developer's Guide: https://www.kernel.org/doc/htmldocs/drm/index.html
+    - The DRM/KMS subsystem from a newbie’s point of view: http://events.linuxfoundation.org/sites/events/files/slides/brezillon-drm-kms.pdf
+
+2. QXL and SPICE user manual
+
+    - 
+
+3. Android Graphic Stack
+
+    - 
+    -
+
+4. source code
+
+    - QXL-SPICE dev-starter page: http://www.spice-space.org/page/DeveloperStartPage
+    - QXL-SPICE for newbies: http://www.spice-space.org/docs/spice_for_newbies.pdf
+        - ch2.4 ~ ch2.x
+
+    - DRM in linux kernel (driver/gpu/drm)
+    - QXL in linux kernel (driver/gpu/drm/qxl)
+    - QXL driver (xf86-video-qxl-0.1.4/)
+        - spice vdagent
+    - QXL device in qemu
+        - hw/display/: qxl.h, qxl.c, qxl-render.c, qxl-logger.c
+        - include/ui/spice-display.h, ui/spice-display.c
+        - ui/spice-core.c
+    - spice server (spice-0.12.5)
+        - spice protocol
+        - libusbredir
+
+trace code
+----------
+- QXL driver to device - port mapped IO
+    
+    ::
+
+        // qxl.h, xf86-video-qxl-0.1.4/src/
+        635 static inline void ioport_write(qxl_screen_t *qxl, int port, int val)
+        636 {
+        637     outb(qxl->io_base + port, val);
+        638 }
+        // qxl_io.c
+        // wrapper function of port mapped IO request
+
+resources
+---------
+
+http://www.phoronix.com/scan.php?page=news_item&px=MTQ5MTU
+
+- xf86-video-qxl 0.1.1 driver
+- X.org DDX driver (DDX: Device Dependent X)
+- KMS support (KMS: Kernel mode setting)
+- QXL DRM driver (DRM: Direct Rendering Manager)
+
+    - Linux DRM Developer's Guide: https://www.kernel.org/doc/htmldocs/drm/index.html
+    - The DRM/KMS subsystem from a newbie’s point of view: http://events.linuxfoundation.org/sites/events/files/slides/brezillon-drm-kms.pdf
+
+- DRI(Direct Rendering Infrastructure)
+
+    - X 官方 DRI intro: http://dri.sourceforge.net/doc/DRIintro.html
+    - 翻譯: http://www.linuxgraphics.cn/xwindow/dri_hack.html`
+    - https://wiki.ubuntu.com/X/Architecture
+
+- DRM(Direct Rendering Manager), in kernel space
+
+    - https://www.wikiwand.com/en/Direct_Rendering_Manager
+    - origin: handling all userspace request to 3D GPU-based video card resource(command queue/VRAM ...), ex. X Server, accelerated mplayer.
+    - current: add some functionality like KMS(Kernel Mode Setting), GEM(Graphic Execution Manager), framebuffer managing ...
+    - userspace api: expose by ioctl() to DRM device 
+    - DRI 架構的最底端.
+
+- QEMU device driver
+
+    - Writing a PCI Device Driver, A Tutorial with a QEMU Virtual Device: http://nairobi-embedded.org/linux_pci_device_driver.html
+    - User I/O Device Driver, An Example with a QEMU Virtual Device: http://nairobi-embedded.org/uio_example.html
+
+
+名詞
+----
+- memory manager
+
+    - intel GEM and Tungsten Graphic TTM
+
+- 3D accelerate
+
+    - DRI(Direct Rendering Infrastructure)
+
+- 2D accelerate
+
+    - EXA
+    - intel UXA: 幾乎等於 EXA, 不過可以從 intel GEM 得到好處
