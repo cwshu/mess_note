@@ -1,3 +1,18 @@
+20150721
+--------
+- docker build -t="<IMAGE_NAME>" <DOCKERFILE_DIR>
+
+    - build a image by dockerfile.
+
+- docker run -ti --name <CONTAINER_NAME> <IMAGE_NAME> bash 
+
+    - enter a bash in container which is based on image 
+    - volume: ``-v=<HOST_DIR>:<CONTAINER_DIR>``
+
+- docker rm <CONTAINER_NAME/CONTAINER_ID>
+- docker inspect <CONTAINER_NAME/CONTAINER_ID>
+
+
 名詞
 ----
 - image
@@ -73,16 +88,29 @@ more
 - docker run -d # daemon
 - docker logs <CONTAINER_NAME>
 - docker stop <CONTAINER_NAME>
-- docker runn [-P|-p] # port forwarding
+- docker run [-P|-p] # port forwarding
 
   - -P # all exposed port
   - -p <HOST_PORT>:<CONTAINER_PORT> # specific port
+
+- docker rm <CONTAINER_ID>
+  
+  - docker rm $(docker ps -aq)
+
+- docker rmi <IMAGE>
+
+  - docker images -a | awk '{print "docker rmi "$3""}' | sh
 
 version control
 +++++++++++++++
 - docker diff <CONTAINER_ID>|<CONTAINER_NAME> # git status
 - docker history <IMAGE> # git log
 - docker commit/push/pull
+
+docker volume
++++++++++++++
+http://dockone.io/article/128
+
 
 概念
 ----
@@ -100,6 +128,7 @@ version control
 dockerfile
 ----------
 開啟 container 時自動執行指令, 通常用於自動化環境安裝跟佈署.
+build 相似的 dockerfile 超過一次時, 如果指令相同會去取 cache (ex. apt-get 不重裝軟體).
 
 ex::
 
@@ -108,6 +137,9 @@ ex::
     RUN pacman -Syu
     RUN pacman-db-upgrade
     ...
+
+- `dockerfile reference <https://docs.docker.com/reference/builder/>`_
+- `dockerfile 5 best practice <http://crosbymichael.com/dockerfile-best-practices.html>`_
 
 reference
 ---------
