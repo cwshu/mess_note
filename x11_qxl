@@ -8,7 +8,7 @@
 
 2. QXL and SPICE user manual
 
-    - 
+    - http://www.spice-space.org/docs/spice_for_newbies.pdf
 
 3. Android Graphic Stack
 
@@ -26,9 +26,10 @@
     - QXL driver (xf86-video-qxl-0.1.4/)
         - spice vdagent
     - QXL device in qemu
+        - include/ui/qemu-spice.h
         - hw/display/: qxl.h, qxl.c, qxl-render.c, qxl-logger.c
-        - include/ui/spice-display.h, ui/spice-display.c
-        - ui/spice-core.c
+        - include/ui/spice-display.h, ui/spice-core.c, ui/spice-display.c, ui/spice-input.c
+        - audio/spiceaudio.c
     - spice server (spice-0.12.5)
         - spice protocol
         - libusbredir
@@ -47,6 +48,62 @@ trace code
         // qxl_io.c
         // wrapper function of port mapped IO request
 
+QXL device in qemu
+++++++++++++++++++
+- PCIQXLDevice->ram->cmd_ring
+- PCIQXLDevice->ram->release_ring
+- QXL interface callback: qxl.c:400 ~ 1000
+
+    - static int interface_get_command(QXLInstance *sin, struct QXLCommandExt *ext)
+
+        - QXLCommandRing* ring; ring = &qxl->ram->cmd_ring; // QXLCommandRing in spice-protocol's spice/ipc-ring.h
+        - SPICE_RING_CONS_ITEM(qxl, ring, cmd); SPICE_RING_POP(ring, notify);
+        - qxl_send_events(qxl, QXL_INTERRUPT_DISPLAY);
+
+qemu + libspice: http://www.cnblogs.com/D-Tec/archive/2013/03/01/2939311.html
+
+libspice mjpeg encode detection
++++++++++++++++++++++++++++++++
+- main
+
+    - red_worker_main
+
+- encode_frame 一路往上 trace
+
+    - DrawablePipeItem, Drawable.stream
+
+- server will control fps to client, and drop some frame
+
+    - http://blog.csdn.net/sdkwjc/article/details/9311469
+    - mjpeg_encoder_reset_quality(MJpegEncoder *encoder, int quality_id, uint32_t fps, uint64_t frame_enc_size)
+    - encoder.rate_control.fps, encoder.rate_control.adjusted_fps, fps_ratio
+    - struct MJpegEncoderRateControl
+
+        - struct MJpegEncoderQualityEval
+
+::
+
+    static inline void marshall_qxl_drawable(RedChannelClient *rcc,
+        SpiceMarshaller *m, DrawablePipeItem *dpi)
+    {
+        Drawable *item = dpi->drawable;
+        /* allow sized frames to be streamed, even if they where replaced by another frame, since
+         * newer frames might not cover sized frames completely if they are bigger */
+        if ((item->stream || item->sized_stream) && red_marshall_stream_data(rcc, m, item)) {
+            return;
+        }
+        if (!display_channel->enable_jpeg)
+            red_marshall_qxl_drawable(display_channel->common.worker, rcc, m, dpi);
+        else
+            red_lossy_marshall_qxl_drawable(display_channel->common.worker, rcc, m, dpi);
+    }
+
+
+spice protocol
+++++++++++++++
+- graphic primitive (lines, images), video streams
+
+
 resources
 ---------
 
@@ -63,7 +120,7 @@ http://www.phoronix.com/scan.php?page=news_item&px=MTQ5MTU
 - DRI(Direct Rendering Infrastructure)
 
     - X 官方 DRI intro: http://dri.sourceforge.net/doc/DRIintro.html
-    - 翻譯: http://www.linuxgraphics.cn/xwindow/dri_hack.html`
+    - 翻譯: http://www.linuxgraphics.cn/xwindow/dri_hack.html
     - https://wiki.ubuntu.com/X/Architecture
 
 - DRM(Direct Rendering Manager), in kernel space
@@ -79,6 +136,15 @@ http://www.phoronix.com/scan.php?page=news_item&px=MTQ5MTU
     - Writing a PCI Device Driver, A Tutorial with a QEMU Virtual Device: http://nairobi-embedded.org/linux_pci_device_driver.html
     - User I/O Device Driver, An Example with a QEMU Virtual Device: http://nairobi-embedded.org/uio_example.html
 
+DRM
+---
+- drm_driver
+  - static info: describe driver, support feature
+  - pointer to methods that DRM core will call to implement DRM API.
+- drm_*_init
+- drm_pci_alloc, drm_pci_init
+- drm_dev_alloc, drm_dev_register (low-level init/register)
+- 
 
 名詞
 ----
