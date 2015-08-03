@@ -8,7 +8,8 @@
 
 lsmod: show all kernel module
 modinfo: show info of one kernel module
-modprobe: add/remove kernel module
+insmod/rmmod: add/remove kernel module
+modprobe: add/remove kernel module (dependency)
 
 - kernel: /boot/vmlinuz-...
 - kernel module: /lib/modules/$(uname -r)/kernel/

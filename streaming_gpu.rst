@@ -17,6 +17,7 @@ intel GVT-g
 
   - `Intel GVT-g GPU Virtualization Moves Closer <http://www.phoronix.com/scan.php?page=news_item&px=MTgyMTE>`_
   - `Intel Pushes Their Graphics Virtualization Capabilities <https://www.phoronix.com/scan.php?page=news_item&px=MTY4MTc>`_
+  - http://www.techenablement.com/multios-gaming-media-and-opencl-using-xengt-virtual-machines-on-shared-intel-gpus/
 
 NVIDIA Grid vGPU 
 ----------------

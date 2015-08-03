@@ -1,8 +1,8 @@
+#!/usr/bin/python2
+# -*- coding: utf-8 -*- 
 """
 This script is from: http://www.robberphex.com/2013/05/141
 """
-#!/usr/bin/python2
-# -*- coding: utf-8 -*- 
  
 import os
 import sys
