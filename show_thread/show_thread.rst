@@ -18,6 +18,14 @@ ps in Linux:
 
 .. image:: linux_psthread.png
 
+- example: 4 thread in 1 process
+
+  - NLWP: 4
+  - PID: 523
+  - LWP: 523, 544, 555, 556 
+
+.. image:: linux_psthread_ex1.png
+
 ps in FreeBSD:
 
 - ps 顯示 thread
