@@ -35,16 +35,18 @@ redirection example::
 
 block device
 ------------
-.. code:: sh
+- ``-drive``, ``-hda``, ``-cdrom``
 
-    # Instead of -cdrom <file> you can use:
-    qemu-system-i386 -drive file=<file>,index=2,media=cdrom
+   .. code:: sh
 
-    # Instead of -hda, -hdb, -hdc, -hdd <file>, you can use:
-    qemu-system-i386 -drive file=<file>,index=0,media=disk
-    qemu-system-i386 -drive file=<file>,index=1,media=disk
-    qemu-system-i386 -drive file=<file>,index=2,media=disk
-    qemu-system-i386 -drive file=<file>,index=3,media=disk
+       # Instead of -cdrom <file> you can use:
+       qemu-system-i386 -drive file=<file>,index=2,media=cdrom
+
+       # Instead of -hda, -hdb, -hdc, -hdd <file>, you can use:
+       qemu-system-i386 -drive file=<file>,index=0,media=disk
+       qemu-system-i386 -drive file=<file>,index=1,media=disk
+       qemu-system-i386 -drive file=<file>,index=2,media=disk
+       qemu-system-i386 -drive file=<file>,index=3,media=disk
 
 monitor mode
 ------------
