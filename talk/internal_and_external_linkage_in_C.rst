@@ -34,9 +34,9 @@ C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 
 
     (compiler 在把 main.c 轉換成 main.o 的過程, 並不知道 foo.c 的存在, 也看不到 foo.c 的內容.)
 
-由於在 compiling 階段, source code 轉換成執行檔的最重要階段, compiler 無法看到一個 C source file 依賴的其他 C source file 跟外部 library (source code and object code) 的內容.
+由於在 compilation 階段, source code 轉換成 executable 的最重要階段, compiler 無法看到一個 C source file 依賴的其他 C source file 跟外部 library 的內容.
 
-所以 C 語言的設計, 需要在每個 C source file 中, 標注該 source file 中每個會用到的變數與函式的型別(type), 包含外部變數及函式. 透過標注, compiler 才能在 compiling 階段進行 type checking. 
+所以在 C 語言的設計中, 我們需要在每個 C source file 裡, 標注該 source file 中每個使用到的變數與函式的型別(type), 包含外部變數及函式. 透過標注, compiler 才能在 compilation 階段進行型別檢查(type checking). 
 
 換句話說, 對於每個 C source file 來看, 如果要使用任何變數跟函式, 都需要使用處的前面有完整的定義(definition), 或者有僅包含型別(type)的宣告(declaration).
 
@@ -51,7 +51,7 @@ C 在將 source code 轉化為 executable 時, 至少可分為 compile 跟 link 
 
 extern variable
 ---------------
-(名詞解釋: 這邊的外部檔案指的是除了自己以外其他的 C source codes, libraries)
+(名詞解釋: 這邊的外部檔案指的是除了自己以外其他的 C source files, libraries)
 
 當需要使用外部檔案的變數時, 必須在使用前宣告該變數為 ``extern`` 並且寫上該變數的型別(type).
 
