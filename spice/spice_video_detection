@@ -1,0 +1,183 @@
+libspice video detection (mjpeg encode it)
+++++++++++++++++++++++++++++++++++++++++++
+
+- spice中视频处理相关: http://blog.csdn.net/mlfcjob/article/details/26218755
+- spice关于display_channel导读: http://blog.chinaunix.net/uid-21706718-id-4863668.html
+
+- main
+
+    - red_worker_main()
+
+        - red_process_commands()
+        - red_push()
+
+- video detection 開始點: red_process_commands()
+
+    - 結束後會 red_push()
+
+- video detection 判斷點: red_is_stream_start()
+
+    - drawable->frames_count >= 20
+    - drawable->gradual_frames_count >= 0.2 * drawable->frames_count
+        
+    - called by red_stream_add_frame()
+        - if red_is_stream_start(): red_create_stream()
+
+video detection call graph
+**************************
+- red_process_commands()
+
+    - red_process_drawable() => red_current_add_qxl()
+
+- red_current_add_qxl()
+
+    - red_current_add()
+    - red_current_add_with_shadow() => exclude_region() => __exclude_region() => red_stream_maintenance() => red_stream_add_frame()
+
+- red_current_add()
+
+    - red_current_add_equal() => red_stream_maintenance() => ...
+    - red_use_stream_trace() => red_stream_add_frame()
+    - exclude_region() => ...
+
+(detail)
+
+  - red_stream_maintenance(RedWorker *worker, Drawable *candidate, Drawable *prev)
+
+      - if candidate->stream: return
+      - if prev->stream
+          - red_detach_stream(worker, stream, FALSE) + red_attach_stream(worker, candidate, stream)
+      - else
+          - red_stream_add_frame()
+
+      - red_is_next_stream_frame
+      - pre_stream_item_swap(worker, stream, candidate);
+
+  - red_is_next_stream_frame
+
+      - prev is stream: > RED_STREAM_CONTINUS_MAX_DELTA (1 sec)
+      - prev isn't stream: > RED_STREAM_DETACTION_MAX_DELTA (0.2 sec)
+
+  - red_stream_add_frame() // frames_count, gradual_frames_count, last_gradual_frame
+
+      - 呼叫 red_update_copy_graduality(), 計算這個 Drawable 的 copy_bitmap_graduality
+      - frames_count = prev+1
+      - gradual_frames_count = prev
+      - if copy_bitmap_graduality != LOW
+          - gradual_frames_count++
+          - last_gradual_frame = frames_count
+      - else
+          - last_gradual_frame = prev
+      - if reset && copy_bitmap_graduality != LOW
+          - frames_count = 1
+          - gradual_frames_count = 1
+          - last_gradual_frame = frames_count (1)
+
+      - if red_is_stream_start()
+          - red_create_stream(), return TRUE
+      - else
+          - return FALSE
+ 
+  - red_update_copy_graduality()
+    
+      - bitmap 更新 (from drawable)
+      - drawable->copy_bitmap_graduality = _get_bitmap_graduality_level(worker, bitmap, drawable->group_id);
+
+  - _get_bitmap_graduality_level
+    
+      - 把 bitmap 裡的每個 chunk (chunk[i].data, num_chunks)
+
+          - 用這 3 個 function: compute_lines_gradual_score_rgb16, compute_lines_gradual_score_rgb24, compute_lines_gradual_score_rgb32
+          - 分別計算 score, num_samples, 並加總
+          - 最後的 score 為 score / num_samples
+          - score 越小, graduality 越大
+
+              - HIGH, MEDIUM, LOW
+              - -0.03(0), 0.002
+              - HIGH 跟 MEDIUM 才算 gradual Drawable
+
+      - score
+
+  - FNAME(compute_lines_gradual_score)(PIXEL *lines, int width, int num_lines,
+
+      - 1*n 或 n*1 的 rect: score = 1, num_samples = 1
+      - else
+          - 從第 1 行中間開始, 每 jump(不會同 column) 個 pixel 拿出來比, 直到倒數第二行結束.
+          - 跟 (+1, 0), (0, +1), (+1, +1) 的 3 個 pixel 分別比較, 並計算 score, num_samples  // FNAME(pixels_square_score)
+              - 4 個 pixel 都一樣 (score 0)
+          - 總和有計算的 pixel 的 score 跟 num_samples
+
+  - pixel compare
+
+      - [0.5]   same: rgb 都相同
+      - [1.0]   contrast: rgb 任一值差超過 60 (8)
+      - [-0.25] non-contrast: else
+
+
+other
+*****
+- encode_frame 一路往上 trace
+
+    - DrawablePipeItem, Drawable.stream
+
+- DrawablePipeItem
+
+- callstack
+
+    - red_channel_client_push()
+
+        - pipe_item = ring_get_tail(&rcc->pipe)
+
+    - red_channel_client_send_item() at red_channel.c
+    - display_channel_send_item()
+    - marshall_qxl_drawable() # decide use image or video handling function
+
+        - dpi->drawable.stream || dpi->drawable.sized_stream
+
+    - red_marshall_stream_data()
+    - encode_frame()
+
+- region
+
+    - QRegion
+    - region_and
+    - region_or
+    - region_intersects
+    - region_add
+    - region_remove
+    - region_init
+    - region_clone
+    - region_destroy
+
+- StreamAgent
+
+    - vls_region
+    - clip
+
+    - __new_stream_clip()
+    - push_stream_clip()
+    - add_clip_rects()
+
+    - red_display_release_stream_clip()
+    - red_attach_stream()
+    - red_stop_stream()
+    - red_display_detach_stream_gracefully()
+    - red_streams_update_visible_region()
+    - red_display_create_stream()
+    - red_display_client_init_streams()
+    - red_display_destroy_streams_agents()
+
+- server will control fps to client, and drop some frame
+
+    - http://blog.csdn.net/sdkwjc/article/details/9311469
+    - mjpeg_encoder_reset_quality(MJpegEncoder *encoder, int quality_id, uint32_t fps, uint64_t frame_enc_size)
+    - encoder.rate_control.fps, encoder.rate_control.adjusted_fps, fps_ratio
+    - struct MJpegEncoderRateControl
+
+        - struct MJpegEncoderQualityEval
+
+Question
+++++++++
+- Graphic command, Drawable Command, Frame?
+- set command duration?
+- 如果 server 端沒 rendering, 如何 compare bitmap

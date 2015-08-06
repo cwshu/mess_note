@@ -12,14 +12,10 @@
 
 3. Android Graphic Stack
 
-    - 
-    -
+    - http://events.linuxfoundation.org/sites/events/files/slides/android-graphics-abs-2014_0.pdf
+    - http://blog.csdn.net/innost/article/details/8272867
 
 4. source code
-
-    - QXL-SPICE dev-starter page: http://www.spice-space.org/page/DeveloperStartPage
-    - QXL-SPICE for newbies: http://www.spice-space.org/docs/spice_for_newbies.pdf
-        - ch2.4 ~ ch2.x
 
     - DRM in linux kernel (driver/gpu/drm)
     - QXL in linux kernel (driver/gpu/drm/qxl)
@@ -33,6 +29,13 @@
     - spice server (spice-0.12.5)
         - spice protocol
         - libusbredir
+
+- trace code doc
+
+    - QXL-SPICE dev-starter page: http://www.spice-space.org/page/DeveloperStartPage
+    - QXL-SPICE for newbies: http://www.spice-space.org/docs/spice_for_newbies.pdf
+        - ch2.4 ~ ch2.x
+
 
 trace code
 ----------
@@ -62,47 +65,9 @@ QXL device in qemu
 
 qemu + libspice: http://www.cnblogs.com/D-Tec/archive/2013/03/01/2939311.html
 
-libspice mjpeg encode detection
-+++++++++++++++++++++++++++++++
-- main
+- libspice ring
 
-    - red_worker_main
-
-- encode_frame 一路往上 trace
-
-    - DrawablePipeItem, Drawable.stream
-
-- server will control fps to client, and drop some frame
-
-    - http://blog.csdn.net/sdkwjc/article/details/9311469
-    - mjpeg_encoder_reset_quality(MJpegEncoder *encoder, int quality_id, uint32_t fps, uint64_t frame_enc_size)
-    - encoder.rate_control.fps, encoder.rate_control.adjusted_fps, fps_ratio
-    - struct MJpegEncoderRateControl
-
-        - struct MJpegEncoderQualityEval
-
-::
-
-    static inline void marshall_qxl_drawable(RedChannelClient *rcc,
-        SpiceMarshaller *m, DrawablePipeItem *dpi)
-    {
-        Drawable *item = dpi->drawable;
-        /* allow sized frames to be streamed, even if they where replaced by another frame, since
-         * newer frames might not cover sized frames completely if they are bigger */
-        if ((item->stream || item->sized_stream) && red_marshall_stream_data(rcc, m, item)) {
-            return;
-        }
-        if (!display_channel->enable_jpeg)
-            red_marshall_qxl_drawable(display_channel->common.worker, rcc, m, dpi);
-        else
-            red_lossy_marshall_qxl_drawable(display_channel->common.worker, rcc, m, dpi);
-    }
-
-
-spice protocol
-++++++++++++++
-- graphic primitive (lines, images), video streams
-
+    - RedWorker->repoll_cmd_ring
 
 resources
 ---------
@@ -144,7 +109,6 @@ DRM
 - drm_*_init
 - drm_pci_alloc, drm_pci_init
 - drm_dev_alloc, drm_dev_register (low-level init/register)
-- 
 
 名詞
 ----
