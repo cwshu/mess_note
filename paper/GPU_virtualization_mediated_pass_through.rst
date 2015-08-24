@@ -58,3 +58,38 @@ Note
          - GPU Page Table
          - Memory-Mapped I/O && Port Mapped I/O registers
        - PCI configuration space register 
+
+video
++++++
+Feature of Mediate Pass-Through
+
+  1. Full-featured vGPU, so we can run native graphic driver in VM (no paravirtualization)
+  2. 95% native performance
+  3. scale-up to 7 VM
+  
+Mediate Pass Through
+    
+  1. Pass through: command buffer & frame buffer
+  2. Trap and Emulate: PageTable, Register
+
+Render Engine Sharing
+
+  1. direct execution of guest command buffer
+  2. Time-based Sharing. time quatium: 60 ms
+
+Display Engine Sharing
+Graphic Memory Resource Partitioning
+
+    - easy to implement in current graphic driver
+
+Secure Isolation
+
+    - VM may map unauthorized graphic memory pages (Mediate Pass-Through)
+    - VM may program unauthorized graphic memory addressses in register and commands
+    - VM may DoS attack to hang GPU
+
+Q&A
+
+    - NVIDIA GPU doesn't support preemption, how about Intel GPU, and how can you audit GPU instruction
+    
+      - Intel GPU doesn't support preemption. We preempt it not at instruction level but ...
