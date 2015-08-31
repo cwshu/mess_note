@@ -30,15 +30,15 @@ archlinux::
     # auto start at boot time
     sudo systemctl enable docker
 
-image::
-
-    [sudo] docker pull base/archlinux
-
 make non-root to run docker::
 
     gpasswd -a user docker # 把 user 加入 docker group
     newgrp docker          # 把 gid(group id) 換成 docker
 
+image::
+
+    docker search archlinux
+    docker pull base/archlinux
 
 指令
 ----
@@ -46,7 +46,7 @@ make non-root to run docker::
 
   - docker version
 
-- 用關鍵字搜尋 docker image
+- 找尋 docker hub 上的 docker image
 
   - docker search <KEYWORD>
 
