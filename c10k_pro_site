@@ -1,0 +1,39 @@
+readiness notification
+    - level-trigger
+    - edge-trigger
+    - defined in BSDCON 2000 paper on kqueue(http://people.freebsd.org/~jlemon/papers/kqueue.pdf)
+
+setting non-blocking mode on disk handle has no effect (same as memory-mapped disk)
+
+readiness notification: monitor a set of file descriptors for readiness events.
+
+select() 只能處理最多 FD_SETSIZE 個 files
+poll(): no hardcoded limit to the number of file descriptors poll() can handle
+/dev/poll
+    - idea: often poll() is called many times with the same arguments.
+
+poll v.s. select v.s. event-based
+http://daniel.haxx.se/docs/poll-vs-select.html
+
+blocking, non-blocking, asynchronous IO, poll, select, kqueue 的實作皆為 kernel level
+使用 open() system call 開 fd 時可用 O_NONBLOCK, O_ASYNC flag 選擇 non-blocking, asynchronous
+存在 aio_read(), aio_write() system call (FreeBSD 10 kernel)
+存在 select(), poll(), kqueue() system call (FreeBSD 10 kernel)
+AsyncIO 有在 POSIX extension 跟 Unix spec 中出現
+(struct aiocb (async io control block) in POSIX 1003.1b realtime extension, Single Unix Spec V2)
+
+C level api(maybe glibc or POSIX api or ... )
+-------------------------------------
+int open(pathname, flags, mode)
+    - return opened file descriptor
+    - flags
+        - file creation flags
+        - file status flags
+            - O_NONBLOCK, O_NDELAY
+            - O_ASYNC is async IO?
+            - O_SYNC
+    - file accessing modes
+        - R, W, RW
+fnctl()
+    - manipulate file descriptor
+write()
