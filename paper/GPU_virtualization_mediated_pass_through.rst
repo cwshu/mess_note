@@ -55,9 +55,63 @@ Note
        - frame buffer
        - command buffer
        - GPU Page Table Entries (PTE)
+
          - GPU Page Table
          - Memory-Mapped I/O && Port Mapped I/O registers
+
        - PCI configuration space register 
+
+3. Design and Implementation
+
+   - Architecture
+
+     - Mediate Pass-Through
+       
+       - Mix Pass-Through & trap-and-emulate
+
+     - Xen Hypervisor: gVirt stub
+       
+       - extend vMMU for Mediate Pass-Through
+
+         - Pass-Through: frame buffer & command buffer
+         - trap-and-emulate: GPU Page Table Entries (PTE) & PCI configuration space register 
+
+     - Dom0 kernel module: gVirt Mediator
+
+       - emulate vGPU for privileged resource (trap-and-emulate)
+       - GPU scheduler
+       - rely on the Dom0 graphics driver to initialize the physical device and to manage power
+
+     - Native driver
+     - Qemu
+
+       - emulate legacy VGA mode, which relys on BIOS bootstate.
+
+   - GPU sharing
+
+     - Mediator
+       
+       - Manage all vGPU of all VMs
+       - emulate privileged instruction
+
+         - handles physical GPU interrupt, generate virtual interrupt to the designated VMs
+         - ex. interrupt: completion of command execution, GPU => OS
+           
+           - GPU => hypervisor (=> Mediator) => VM
+
+     - render engine scheduling
+
+       - time slice: 1/60 sec, because overhead of context switch is 1000x more than CPU's one.
+
+     - render context switch
+       
+       - store internal pipeline state and I/O register states.
+       - cache/TLB flush
+    
+     - dedicated ring buffer to carry additional command
+     - display management
+
+       - manage display engine of different VM framebuffer
 
 video
 +++++
