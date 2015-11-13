@@ -2,7 +2,7 @@
 
 .. code:: sh 
 
-    qemu-system-x86_64 --enable-kvm -m 2G -cdrom ArchLinux.iso -boot order=d test.qcow2
+    qemu-system-x86_64 -enable-kvm -m 2G -cdrom ArchLinux.iso -boot order=d test.qcow2
 
 - usage example
 
@@ -52,10 +52,16 @@ monitor mode
 ------------
 control the running VM.
 
-- redirect monitor to host OS tcp socket::
+- How to use qemu monitor mode
 
-  -monitor telnet:0.0.0.0:60023,server,nowait # qemu command line option
+  1. switch between VM screen and qemu monitor mode
 
+     ``alt-1`` to VM screen and ``alt-2`` to qemu monitor mode
+
+  2. redirect monitor to host OS tcp socket::
+
+     -monitor telnet:0.0.0.0:60023,server,nowait # qemu command line option
+ 
 http://wiki.qemu.org/download/qemu-doc.html#pcsys_005fmonitor
 http://en.wikibooks.org/wiki/QEMU/Monitor#Devices
 
@@ -64,6 +70,7 @@ examples::
     info network
     help hostfwd_add
     hostfwd_add tcp:127.0.0.1:8000-:8000
+    quit # VM 結束
 
 monitor mode 下的 ``hostfwd_add tcp:127.0.0.1:8000-:8000`` command 似乎無效, 待尋找原因.
 
@@ -80,3 +87,4 @@ examples:
 ::
 
     qemu-img create -f raw xxx.img 1G
+    qemu-img convert -f raw -O qcow2 xxx.img xxx.qcow2
