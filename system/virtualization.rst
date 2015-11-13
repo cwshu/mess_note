@@ -38,6 +38,10 @@ intel VT series
 
     - VPIDs(vcpu id), EPT.
 
+- trap in Hardware Assisted Virtualization
+  
+  - http://pages.cs.wisc.edu/~remzi/OSTEP/vmm-intro.pdf
+
 ref
 +++
 - intel VT instructions: 

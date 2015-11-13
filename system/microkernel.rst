@@ -17,3 +17,6 @@ microkernel
     - IPC
 
   - some detail: http://pdos.csail.mit.edu/6.097/lec/l14.html
+
+http://www.slideshare.net/jserv/microkernel-evolution
+https://www.facebook.com/groups/ncku.embedded2015/permalink/769734679839686/
