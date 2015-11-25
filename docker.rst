@@ -1,3 +1,107 @@
+名詞
+----
+- image
+- container
+
+installation
+------------
+- `docker - installation guide <https://docs.docker.com/installation/>`_
+- `archwiki - docker <https://wiki.archlinux.org/index.php/Docker>`_
+
+archlinux::
+
+    yaourt -S community/docker
+    sudo systemctl start docker
+
+    # auto start at boot time
+    sudo systemctl enable docker
+
+make non-root to run docker::
+
+    gpasswd -a user docker # 把 user 加入 docker group
+    newgrp docker          # 把 gid(group id) 換成 docker
+
+check installation::
+
+    docker version
+
+base image
+----------
+choose the userspace environment. e.g. archlinux, ubuntu ... etc
+
+search images from registry, default registry is dockerhub::
+
+    docker search archlinux
+    # docker search <KEYWORD>
+
+pull the image you want::
+
+    docker pull base/archlinux
+    # docker pull <USERNAE>/<IMAGE_NAME>
+    
+list local images::
+
+    docker images
+
+run the container base on image <IMAGE>, using bash shell as UI::
+
+    docker run -t -i base/archlinux bash 
+    # docker run <IMAGE> <COMMAND>
+
+指令
+----
+- `門外漢的 Docker 小試身手 <http://www.codedata.com.tw/social-coding/docker-layman-abc/>`_
+
+- ``docker run <IMAGE> <COMMAND>``
+  
+  - 以此 image 為基礎開啟一個新的 container, 在 container 中執行 <COMMAND>
+  - e.g. ``docker run -t -i <IMAGE> bash``
+
+  
+- ``docker ps [-a|-l]`` 
+
+  - 列出 containers 跟 container id
+  - -a: 列出所有, 包含還活著(還在執行程式的)跟執行完程式關閉的 container.
+  - -l: 列出最後一次執行的 container
+  - -n=<NUM>: 列出最後 n 次
+
+- ``docker commit [-m="commit log"] [-a="author name"] <CONTAINER_ID> <IMAGE>``
+
+  - 把該 container 現在的狀態, 作為一個 commit 存到 image 上.
+  - 也可存成一個新的 image
+  - 要保留 container 做過的事(ex. 安裝軟體)必須 commit 到 image 上, ``docker run`` 只能以 image 為基礎啟動.
+
+- ``docker help <SUBCOMMAND>`` (e.g. run)
+
+  - 看 <SUBCOMMAND> 的說明
+
+more
+++++
+- ``docker run``
+
+  - ``-d`` # daemon
+  - port forwarding
+
+    - ``-P`` # all exposed port
+    - ``-p <HOST_PORT>:<CONTAINER_PORT>`` # specific port
+
+- ``docker stop <CONTAINER_NAME>``
+- ``docker rm <CONTAINER_ID>``
+  
+  - remove all containers: ``docker rm $(docker ps -aq)``
+
+- ``docker rmi <IMAGE>``
+
+  - remove all images: ``docker images -a | awk '{print "docker rmi "$3""}' | sh``
+
+- ``docker logs <CONTAINER_NAME>``
+
+version control
++++++++++++++++
+- docker diff <CONTAINER_ID>|<CONTAINER_NAME> # git status
+- docker history <IMAGE> # git log
+- docker commit/push/pull
+
 20150721
 --------
 - docker build -t="<IMAGE_NAME>" <DOCKERFILE_DIR>
@@ -12,105 +116,9 @@
 - docker rm <CONTAINER_NAME/CONTAINER_ID>
 - docker inspect <CONTAINER_NAME/CONTAINER_ID>
 
-
-名詞
-----
-- image
-- container
-
-installation
-------------
-`docker - installation guide <https://docs.docker.com/installation/>`_
-`archwiki - docker <https://wiki.archlinux.org/index.php/Docker>`_
-
-archlinux::
-
-    yaourt -S community/docker
-    sudo systemctl start docker
-    # auto start at boot time
-    sudo systemctl enable docker
-
-make non-root to run docker::
-
-    gpasswd -a user docker # 把 user 加入 docker group
-    newgrp docker          # 把 gid(group id) 換成 docker
-
-image::
-
-    docker search archlinux
-    docker pull base/archlinux
-
-指令
-----
-- 觀看 docker 的版本
-
-  - docker version
-
-- 找尋 docker hub 上的 docker image
-
-  - docker search <KEYWORD>
-
-- 下載指定的 image
-
-  - docker pull <USERNAME>/<IMAGE_NAME>
-
-- 列出現有的 image
-
-  - docker images
-
-image and container
-+++++++++++++++++++
-`門外漢的 Docker 小試身手 <http://www.codedata.com.tw/social-coding/docker-layman-abc/>`_
-
-- docker run <IMAGE> <COMMAND>
-  
-  - 以此 image 為基礎開啟一個新的 container, 在 container 中執行 <COMMAND>
-  
-- docker ps [-a|-l] 
-
-  - 列出 containers 跟 container id
-  - -a: 列出所有, 包含還活著(還在執行程式的)跟執行完程式關閉的 container.
-  - -l: 列出最後一次執行的 container
-  - -n=<NUM>: 列出最後 n 次
-
-- docker commit [-m="commit log"] [-a="author name"] <CONTAINER_ID> <IMAGE>
-
-  - 把該 container 現在的狀態, 作為一個 commit 存到 image 上.
-  - 也可存成一個新的 image
-  - [未確認] 要保留 container 做過的事(ex. 安裝軟體)必須 commit 到 image 上, ``docker run`` 只能以 image 為基礎啟動.
-
-- some example command
-
-  - docker run -t -i base/archlinux bash (拿到一個 bash)
-
-more
-++++
-- docker run -d # daemon
-- docker logs <CONTAINER_NAME>
-- docker stop <CONTAINER_NAME>
-- docker run [-P|-p] # port forwarding
-
-  - -P # all exposed port
-  - -p <HOST_PORT>:<CONTAINER_PORT> # specific port
-
-- docker rm <CONTAINER_ID>
-  
-  - docker rm $(docker ps -aq)
-
-- docker rmi <IMAGE>
-
-  - docker images -a | awk '{print "docker rmi "$3""}' | sh
-
-version control
-+++++++++++++++
-- docker diff <CONTAINER_ID>|<CONTAINER_NAME> # git status
-- docker history <IMAGE> # git log
-- docker commit/push/pull
-
 docker volume
 +++++++++++++
 http://dockone.io/article/128
-
 
 概念
 ----
