@@ -14,14 +14,19 @@
     -monitor telnet:0.0.0.0:60023,server,nowait 
 
 - parameters
-  - -kernel <KERNEL_IMAGE>
-  - -append "<KERNEL_PARAMETERS>"
+
+  - ``-kernel <KERNEL_IMAGE>``
+  - ``-append "<KERNEL_PARAMETERS>"``
   
 network
 -------
 http://en.wikibooks.org/wiki/QEMU/Networking
+http://wiki.qemu.org/Documentation/Networking
+
 - usermode (default)
-- redirection
+
+  - redirection
+
 - TAP networking
 - VDE networking
 
