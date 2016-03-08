@@ -1,0 +1,136 @@
+DNS and Mail Server
+===================
+DNS MX(Mail eXchange) 標誌
+    往別的 Mail server 寄信時會先查 DNS MX record(可有多組), MX record 無法送信才會找 A record
+
+MUA, MTA, MDA, MRA, mailbox
+===========================
+Mail Agent(User, Transfer, Delivery, )
+
+MUA
+    user 端 client
+    ex. thunderbird, outlook?
+MTA
+    一般俗稱 mail server, 負責收信/寄信 
+    ex. postfix, sendmail
+MRA (Access Agent?)
+    負責把收到的信給 MUA 看(即提供 IMAP/POP3)
+    ex. dovecot
+mailbox
+    MTA 收到信的存放處, 通常在 MTA 主機上的 /var/spool/mail
+
+MDA(mail delivery agent)
+    分析由 MTA 所收到的信件表頭或內容等資料， 來決定這封郵件的去向
+    1. 收信 filter
+    2. 自動回信
+    
+    ex. procmail
+        MTA 收到信之後可交給 procmail 做 filter
+MSA
+    Route mail to local MTA
+
+Basic Email procedure
+=====================
+寄信
+    MUA => MTA =>(relay) MTA
+    smtp protocol
+
+收信
+    * 信在 MTA 的機器上
+    1. MUA 跟 MRA 要信(MRA 需跟 MTA 同機器)
+        * use IMAP/POP3 protocol
+    2. webmail
+    3. remote 到 MTA 收信
+
+寄信(detail)
+    1. MUA 請 MTA 幫忙寄信 (自己寄件者)
+    2. MTA 根據收件者對象
+        * 本 MTA => 送到 MDA 請他給 mailbox
+        * 其他 MTA => 轉送給其他 MTA
+            * 稱為 relay
+    3. 目標 MTA 收到信之後會轉給 MDA 幫忙處理
+
+Relay
+    MTA 幫忙轉信 
+        (src MTA => dest MTA), MUA 請 MTA 幫忙寄信到其他 MTA
+    open relay
+        所有人都可以借你的機器 relay, 會被垃圾信濫用.(頻寬耗盡, 黑名單 ... 等問題)
+    限制方式
+        1. 針對 "某些 ip" 開放 relay (ex. private LAN)
+        2. 加入認證機制(帳號密碼認證) => cyrus/dovecot sasl
+        3. 把 MUA 架在 MTA 的主機上 (ex. OpenWebMail)
+
+SMTP protocol
+=============
+    HELO/EHLO $smtp_client
+    MAIL FROM:<sender@mydomain.com>
+    RCPT TO:<friend@example.com>
+    DATA
+        (實際我們看到的信件內容)
+        Subject
+        From
+        To
+    QUIT
+
+- SMTP and mail
+    - envelope 是給 MTA 看的 (SMTP protocol)
+    - header 是給 UA (其實就是給 user 看的.)
+
+
+Other Topics
+============
+DNS 反解 in email Server
+    為了防垃圾信, DNS 反解告訴別人你的 email server 資訊很重要.
+
+Mail Alias
+    group name: username1, username2 ...
+    寄給 group name, 會自動複製信寄給所有 username
+    username 也可以寫別台 MTA 的完整 email 路徑(username@domain_name)
+    alias 只有 root 可改(in sendmail), 每個 user 可以寫自己的 forward (~/.forward)
+
+上下游 MTA(做 forwarding), DNS MX record
+    DNS MX => MTAup => MTAdown
+
+MTA 1 => MTA 2
+    ehlo
+    recv to hostname == MTA 2 
+        recv to hostname == MTA 2's mydestination (mail to this MTA)
+            *recieve
+        break
+    relay 分析
+        source == mynetworks
+            destination == relay_domains
+                *mail to queue and wait for MDA to relay email
+        break
+
+收信方面：必需符合底下需求：
+    發信端 in $inet_interfaces
+    信件 header 之 mail to in $mydestination, mail to in virtual_maps (與虛擬主機有關)
+    
+轉遞方面 (Relay)：必需符合底下需求：
+    發信端 in $inet_interfaces
+    發信端 source in $mynetworks, 發信端 src 或信件 header 之 mail to 符合 $relay_domains 之設定內容
+        
+
+misc
+    mail gateway server
+
+
+權限
+    /etc/aliases, 只能給信任的 user, default: 644
+    db file, default: 640
+    /var/spool/mqueue, /var/spool/postfix, default: 700
+
+filter: Anti-spam, Anti-virus ... etc
+=====================================
+- antivirus
+- spam
+- black list
+    - ORDB
+        - 一套紀錄 Open Relay 主機的資料庫
+        - 已停止維運
+    - RBL(Real-time Blackhole List)
+- grep list
+    - postgrey
+- SPF framework
+

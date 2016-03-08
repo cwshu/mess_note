@@ -1,0 +1,33 @@
+
+                寫下 remote url
+|------------|  -------------->  |------------|
+| 本機套件庫 |                   | 遠端套件庫 | 
+|------------|  <--------------  |------------|
+                     update
+   |         
+   | install 
+   |                      
+   | upgrade/dist-upgrade 
+   |                      
+   v                      
+                          
+|--------------| 
+| 本機套件狀態 | 
+|--------------| 
+
+   | 
+   | remove/purge/autoremove
+   |
+   | clean/autoclean
+   v
+
+ /dev/null (garbage)
+
+
+build from source
+    - source
+    - build-dep
+Misc
+    - check
+    - download
+    - changelog

@@ -1,0 +1,89 @@
+Cyrus SASL (postfix 2.3 之後也支援 dovecot 的 sasl)
+---------------------------------------------------
+一套認證的 lib, compile Postfix 時要 link
+mail server call SASL 的函式去認證, 通常可以直接取 /etc/shadow 的帳密來認證
+
+mechanism
+    PLAIN
+        base64 傳帳密
+    LOGIN
+        舊式 MUA 用的登入方式
+    OTP(one-time password)
+        smtp client 要 generate OTP 憑證
+    DIGEST-MD5
+        2 邊共用 secret password, server 產生 challange 給 client, 
+        secret password + challange 可計算 response,
+        server 檢驗 client 回傳的 response 是否正確.
+
+        要使用 plaintext password
+    KERBEROS
+    ANONYMOUS
+        smtp 不會用到
+    CRAM-MD5
+        要使用 plaintext password
+    NTLM
+    SCRAM
+
+framework
+    帳號密碼的來源, 以及如何取出認證
+        ex. 
+            用 pam 取 unix 密碼 or mysql 密碼
+            用 sql plugin 取 mysql, postgresql 密碼
+            用 ldapdb plugin 取 LDAP server 的密碼
+
+    Postfix auth backend
+        saslauthd: /etc/shadow, PAM, IMAP server
+        sasldb: sasldb (Cyrus sasl Berkeley DB database)
+        sql: MySQL, PostgreSQL, SQLite
+        ldapdb: LDAP
+
+    pwcheck_method in smtpd.conf(Postfix)
+        saslauthd
+        auxprop (auxiliary property plugins)
+            auxprop_plugin: sasldb, sql, or ladpdb
+
+    Postfix with unix password
+        Postfix 沒有 root 權限, 要透過 saslauthd deamon 取 Unix system password
+        postfix 設定使用 saslauthd
+            smtpd.conf(pwcheck_method)
+        啟動 saslauthd
+            saslauthd -a pam
+        saslauthd 只支援 PLAIN (LOGIN?)
+
+    Postfix with sasl 專用密碼(sasldb)
+        smtpd.conf(pwcheck_method)
+        
+    Postfix auth with mysql
+        USE Auxprop - sql
+            需要 MySQL 裡存 plaintext password
+        use saslauthd + pam (pam_mysql)
+
+    sql plugin
+        smtpd.conf
+             pwcheck_method, auxprop_plugin
+             sql_engine
+                mysql, pgsql, or sqlite ...
+             sql_hostnames
+                hostname or hostname:port
+             sql_user, sql_passwd
+                database 的登入帳號
+             sql_database
+                存帳號密碼的 database
+             sql_select: SELECT password FROM users WHERE user = '%u'@'%r'
+                取 plaintext password 的 select command
+
+
+supplement
+----------
+[FreeBSD] Cyrus sasl Port config
+    ALWAYSTRUE
+    AUTHDEAMOND - 應該是 saslauthd
+    OBSOLETE_CRAM_ATTR
+    KEEP_DB_OPEN - berkeley DB open
+    BDB - berkeley DB support (應該是 sasldb 使用的)
+    MYSQL - MySQL support
+    PGSQL - PostgreSQL support
+    SQLITE2 - SQLite2 support
+    SQLITE3 - SQLite3 support
+    -- MECH --
+        mechanisms support

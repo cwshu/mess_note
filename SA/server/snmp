@@ -1,0 +1,76 @@
+rc.conf
+
+    snmpd_enable="YES"
+    snmpd_flags="-a"
+    snmpd_conffile="/usr/local/share/snmp/snmpd.conf /etc/snmpd.conf"
+    snmptrapd_enable="YES"
+    snmptrapd_flags="-a -p /var/run/snmptrapd.pid"
+
+make config variable(configure)
+
+    NET_SNMP_SYS_CONTACT="zi@FreeBSD.org"
+    NET_SNMP_SYS_LOCATION="USA"
+    DEFAULT_SNMP_VERSION=3
+    NET_SNMP_MIB_MODULES="host smux mibII/mta_sendmail ucd-snmp/diskio"
+    NET_SNMP_LOGFILE=/var/log/snmpd.log
+    NET_SNMP_PERSISTENTDIR=/var/net-snmp
+
+cacti
+-----
+Cacti is now installed. If you intall it for the first time,
+you may have to follow this steps to make it work correctly:
+
+1. Create the MySQL database:
+# mysqladmin --user=root create cacti
+2. Create a mysql user/password for cacti:
+(change user and/or password if required)
+# echo "GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'cactiuser'; FLUSH PRIVILEGES;" | mysql
+3. Import the default cacti database:
+# mysql cacti < /usr/local/share/cacti/cacti.sql
+4. Edit /usr/local/share/cacti/include/config.php.
+5. Add the line to cron jobs with the command:
+# crontab -u cacti -e
+*/5 * * * * /usr/local/bin/php /usr/local/share/cacti/poller.php > /dev/null 2>&1
+6. Add alias in apache config for the cacti dir:
+Alias /cacti "/usr/local/share/cacti/"
+7. Be sure apache gives an access to the directory ('Allow from' keywords).
+8. Open a cacti login page in your web browser and login with admin/admin.
+
+
+SNMP operation
+--------------
+- SNMP operation (get/set ...) use community name to auth.
+- access policy
+    - view: subset of MIB
+        - subtree
+    - access mode:
+        - ro, rw, ... etc
+
+Testing
+-------
+snmpwalk -v 2c -c narouser 140.113.244.23 .1.3.6.1.2.1.25.3.2.1.3
+snmpwalk -v 2c -c narwuser 140.113.244.23 .1.3.6.1.2.1.1.4.0
+
+Misc
+----
+權限
+    user
+    access community
+
+community name
+security name
+group name
+view: group have right
+
+- access
+    - security group
+    - 有權限 read 的 MIB (view)
+    - 有權限 write 的 MIB (view)
+- Process check
+    - check 同名 process 數量, ex. 10 < httpd < 100
+    - proc PROC_NAME [MAX=0] [MIN=0]
+
+
+snmpwork v.s. snmpget: http://community.zenoss.org/message/51602?tstart=0
+
+

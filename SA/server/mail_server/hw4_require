@@ -1,0 +1,21 @@
+- postfix
+    - trust network: @cs.nctu.edu.tw
+    - rewriting address
+        - @bsd2.cs.nctu.edu.tw -> @cs.nctu.edu.tw
+        - except root mails
+    - alias
+        - root:u1240976@gmail.com
+        - na:root
+- dovecot sasl
+    - TLS encryption
+- dovecot POP3/IMAP
+
+- Clanav for antivirus
+- SpamAssassin
+    - add [SPAM] tag to subject
+    - keywords: 減肥
+
+- postgrey (greylisting)
+- procmail (MDA filter)
+    - record log (/var/log/procmail.log)
+    - keyword filter

@@ -1,0 +1,13 @@
+rc.conf
+    sendmail_enable="NO"
+    #postfix_enable="YES"
+    #saslauthd_enable="YES"
+
+main.cf
+    myhostname = susu
+    myorigin = $myhostname
+    inet_interface = all
+    mydestination = $myhostname, localhost
+    mynetworks = 127.0.0.1, 140.113.0.0/16
+
+postalias /etc/aliases

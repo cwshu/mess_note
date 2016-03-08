@@ -1,0 +1,16 @@
+EHLO bsd2.cs.nctu.edu.tw
+MAIL FROM:<cwshu@bsd2.cs.nctu.edu.tw>
+rcpt to:<log01@susu.nctucs.net>
+DATA
+Subject: smtp
+From: cwshu@bsd2.cs.nctu.edu.tw
+To: log01@susu.nctucs.net
+
+This is content
+
+.
+
+QUIT
+
+EHLO bsd2.cs.nctu.edu.tw
+AUTH PLAIN AGxvZzAxAGhvcml2b24=

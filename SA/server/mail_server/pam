@@ -1,0 +1,56 @@
+linux 下的給其他程式用的認證服務
+只要透過修改文件檔(設定檔)就可以更改認證設定(不需要重新 compile)
+pam can use /etc/passwd, NIS, LDAP ... for authentication
+
+setting files
+    單一檔案: /etc/pam.conf
+    資料夾, 每個 service 唯一檔案: /etc/pam.d/ 
+        example: login, passwd, su, smtp, sshd
+
+pam 有提供 api 給程式使用(man 3 pam in FreeBSD)
+
+stack modules
+    pam 的使用方式是可以在設定檔設定多組 module
+    依序做每個 module 的檢查, 決定是否通過 auth 以及一些細部設定.
+
+設定檔 pam.d/service 
+    每個 module 分 4 部分
+        modules_type
+        control_flags
+        module_path
+        options(參數)
+
+4 modules_type
+    authentication:
+        驗證 user 給的資訊, ex. account/password
+    account management: 
+        除了驗證之外的帳號管理, ex. account 的權限
+    password management:
+        更新認證訊息相關, ex. 
+    session management:
+        認證過後的 initialization
+
+control flags
+    某個 module 認證 success/failure 時採取的行動
+    required
+        必須要通過此認證
+        fail 時會繼續跑完其他 module 的認證才回傳 failure (為了不讓別人知道在哪個 module fail)
+    requisite
+        必須要通過此認證
+        fail 時會直接回傳 failure
+    sufficient
+        前面的 required/requisite 都通過, 且此認證也通過,
+        pam 直接回傳 success(認證成功) 不再跑後面的 module
+        failure 會被當成 optional 處理, 也就是忽略
+    optional
+        success/failure 不影響, just a log
+    include
+        include other setting file in this column
+
+options(參數)
+    use_first_pass
+    try_first_pass
+    debug
+        syslogd 為 debug level 的 info 寫入紀錄檔
+    nullok
+        permit user with null password in /etc/shadow

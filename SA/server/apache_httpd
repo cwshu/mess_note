@@ -1,0 +1,58 @@
+- deamon
+- listen 80 port need root privileges. (bind 80 port and do few things like open log file.) 
+    - but child processes has few privileges, controlled by MPM module.
+
+- root conf 檔路徑
+    - compile time 編譯參數,
+    - runtime 的 command line option (argv)
+
+- root process pid (pidfile)
+    - <ServerRoot> + <PidFile> (httpd.conf settings)
+    - FreeBSD in /var/run/httpd.pid
+    - kill -TERM `cat /var/run/httpd.pid` (kill root process)
+
+- signals
+    * -TERM, stop
+    * -USR1(user defined signal), graceful restart(完成手上已經在運作的工作後在 restart)
+    * -HUP, restart
+    * -WINCH(window size change), graceful stop
+
+設定
+----
+- command directive
+    - keyword + one or more arguments
+- global and non-global settings 
+    - configuration section
+- File Handler
+    - default-handler: 處理 static file
+    - send-as-is: 幾乎不加 http header, static file 自己寫 http header and http status code
+    - cgi-script: dynamic content by cgi protocol
+    - 可自定 file handler, 透過 cgi protocol 處理檔案
+
+- configuration section
+    - Directory
+    - VirtualHost
+    - IfModule
+    - File
+
+- File Handler
+    - default-handler: 處理 static file
+    - send-as-is: 幾乎不加 http header, static file 自己寫 http header and http status code
+    - cgi-script: 把 file 當成可執行 (x permission + executable/script with shebang )
+    - server-info, server-status
+    - Action directive 可自定 file handler, 透過 cgi protocol 處理檔案
+    - 自訂 handler 相依
+        - AddHandler {handler_name} {.file_ext}: 設定該副檔名的檔案使用此 handler.
+        - SetHandler {handler_name}: 所有檔案使用此 handler, 通常用於 section 中.
+
+- CGI
+    - ScriptAlias
+    - AddHandler
+    - Option ExecCGI
+    - suExec for userdir (更換執行 script 的 user)
+
+Directives
+++++++++++
+- Listen {ip}:{port} {protocol(http/https)}
+    - apache listen 的 port, ip 沒指定代表所有 interface, protocol 在 80/443 沒指定會預設 http/https
+- Option: 可使用的功能 (feature), 通常在不同 section 下不同.

@@ -1,0 +1,205 @@
+Postfix
+=======
+
+Details
+-------
+Postfix
+    /etc/postfix/main.cf
+        main setting file
+    /etc/postfix/master.cf
+        postfix 每個 process 的運作參數
+
+    垃圾信 filter (檔案沒開就不啟用)
+        /etc/postfix/header_checks
+        /etc/postfix/body_checks
+
+    /usr/sbin/postfix
+        deamon
+    /usr/sbin/postconf
+        list setting data
+        -n: list different to default
+        -a/A: list the sasl lib postfix compile with (smtp server/client)
+    /usr/sbin/postalias
+        transfer aliases to aliases.db
+        for better performance
+    /usr/sbin/postmap
+        transfer access to access.db
+    /usr/sbin/postcat
+        檢查 queue 的信件
+    /usr/sbin/postqueue 
+    /usr/sbin/postsuper
+
+    Transport Maps
+        transport_maps = hash:/usr/local/etc/postfix/transport
+
+/etc/postfix/main.cf
+    main.cf 語法
+        詳見鳥哥 22.2.4
+
+    myhostname
+        domain_name
+    myorigin
+        發信的主機(mail from)
+
+    inet_interfaces
+        default: all
+        postfix 25 port 聽的網卡
+        ex. lo, all
+    inet_protocols
+        ipv4/ipv6
+    mydestination
+        對方的 recv to 填 xxx domain 我們會收下.
+    relay_domains
+        default: $mydestination
+        幫忙 relay 的下游主機(MTAup 的 relay_domains 要寫 MTAdown)
+    // mynetworks_style
+    mynetworks
+        開放 relay 的 ip
+        可加入 /etc/postfix/access
+            /etc/postfix/access
+                設定 relay 開放/封鎖 ip ... 的 setting 檔
+                main.cf 需開啟
+                postmap 處理成 db 檔才會啟用
+        會蓋過 mynetworks_style
+
+    alias_maps
+        aliases 檔案 path?
+        可加入 /etc/aliases
+            /etc/aliases
+                alias 跟 group
+            aliases.db 沒產生 mail 收信可能會有問題 (temporary lookup ...)
+        可使用 MySQL table
+            http://www.postfix.org/MYSQL_README.html
+
+    smtp_*_restrictions
+        permit_sasl_auth (sasl 的認證)
+        SASL login user 跟 Mail From 的 mapping (以免偽造寄信人)
+            reject_sender_login_mismatch(main.cf: smtpd_sender_login_maps)
+            reject_authenticated_sender_login_mismatch
+            reject_known_sender_login_mismatch
+            reject_unauthenticated_sender_login_mismatch
+        
+        permit_mynetworks,               <==預設值, 允許來自 mynetworks 設定值的來源
+        reject_unknown_sender_domain,    <==建議, 拒絕不明的來源網域 (限制來源 MTA )
+        reject_unknown_recipient_domain, <==建議, 拒絕不明的收件者 (限制目標 MTA)
+        reject_unauth_destination,       <==預設值, 拒絕不信任??的目標
+
+        smtpd_recipient_restrictions => smtpd_relay_restrictions (postfix 2.10)
+    smtpd_sender_login_maps
+
+    Cyrus SASL
+        mail to 綁定 sasl 帳號
+            in main.cf
+                smtpd_sender_login_maps = hash:$path_of_對照表
+            postfix 對照表(sasl_senders)
+                mail_to username
+                    u1240976.cs00@nctu.edu.tw u1240976.cs00
+                支援 regex 
+            把 reject_sender_login_mismatch 加入 smtpd_*_restrictions 過濾規則組
+
+        smtpd_sasl_security_options
+            禁止某些 sasl mechanisms
+
+/etc/postfix/access
+    規範的範圍或規則               Postfix 的動作 (範例如下)
+    IP/部分IP/主機名/Email等       OK/REJECT
+    120.114.141.60                 OK
+    .edu.tw                        OK
+    av.com                         REJECT
+    192.168.2.                     REJECT
+
+    % postmap hash:/etc/postfix/access
+
+/etc/aliases, ~/forward
+    aliases 跟 group
+
+email queue
+    暫時無法寄出的信(最多留 5 天)
+    postqueue -p
+        list mails in queue
+    postcat $Queue_ID
+        讀信件內容
+    postfix flush
+        可寄出 queue 的信(without postfix start), 待驗證
+
+Cryus sasl
+----------
+
+Cyrus sasl 中對 postfix 的這個程式的設定檔名稱(default smtpd.conf), (由 postfix => cyrus)
+    main.cf - smtpd_sasl_path = smtpd (postfix 2.3 and later)
+smtpd.conf path
+auth 類型
+    saslauthd: /etc/shadow, PAM, IMAP server
+    sasldb: sasldb (Cyrus sasl Berkeley DB database)
+    sql: MySQL, PostgreSQL, SQLite
+    ldapdb: LDAP
+
+    saslauthd
+        postfix smtp server <=> saslauthd 
+            (Unix socket in /var/run/saslauthd, postfix must have r+x permission)
+        pwcheck_method 
+        mech_list: PLAIN LOGIN
+
+        saslauthd -a shadow
+            /etc/shadow (unix 帳密)
+        saslauthd -a pam
+            pam auth(/etc/pam.d/smtp)
+    sasldb
+        pass
+    sql
+        smtpd.conf
+             pwcheck_method, auxprop_plugin
+             sql_engine
+                mysql, pgsql, or sqlite ...
+             sql_hostnames
+                hostname or hostname:port
+             sql_user, sql_passwd
+                database 的登入帳號
+             sql_database
+                存帳號密碼的 database
+             sql_select: SELECT password FROM users WHERE user = '%u'@'%r'
+                取 plaintext password 的 select command
+    ldapdb
+        pass
+
+    smtpd.conf
+        smtpd_sasl_type = cyrus
+            使用 cyrus or dovecot 的 sasl
+        smtpd_sasl_auth_enable = yes
+        broken_sasl_auth_clients = yes
+        (framework)
+        pwcheck_method, auxprop_plugin: auth 類型
+            (saslauthd, )
+            (auxprop, sasldb)
+            (auxprop, sql)
+            (auxprop, ldapdb)
+        (mechanism)
+        mech_list: $mechanisms
+        smtpd_sasl_security_options - ban 掉的 mechanisms
+            noanonymous 
+            noplaintext
+            ... etc
+        (tls)
+        smtpd_sasl_tls_security_options = $smtpd_sasl_security_options
+            走 tls 時能經過哪些 mechanisms
+        smtpd_tls_auth_only = yes
+            只能透過 tls
+
+Cyrus SASL 快速 install/setting step
+    1. compile Postfix with SASL
+    2. main.cf: smtpd_sasl_path(default: smtpd)
+    3. smtpd
+        framework and machinism
+            pwcheck_method
+            auxprop
+            mech
+    4. start framework related things
+        ex. start saslauthd deamon (if use this)
+            saslauthd -a pam
+    5. main.cf
+        smtpd_sasl_auth_enable = yes
+        smtpd_recipient_restrictions 排序加上 permit_sasl_auth
+        
+        broken_sasl_auth_clients = yes
+            支援不合 smtp protocol 的 client(250 AUTH=$mechanisms)
+    6. postfix reload(重啟 postfix)

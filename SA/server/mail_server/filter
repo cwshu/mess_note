@@ -1,0 +1,108 @@
+- antivirus
+- spam
+- black list
+- grep list
+- SPF framework
+- DKIM(DomainKey identifier mail)
+
+
+Clanav, SpamAssassin, and amavisd
+---------------------------------
+Deamon-based filter: 
+    queue manager send mail to deamon, deamon filter mail, and send clean mail back to queue manager
+
+Freebsd 
+    ports
+        security/amavisd-new
+        security/clamav
+
+    rc.conf
+        spamd_enable="YES"
+        amavisd_enable="YES"
+        clamav_clamd_enable="YES"
+        clamav_freshclam_enable="YES"
+
+amavisd.conf
+    # virus and spam check
+    @bypass_virus_checks_maps
+    @bypass_spam_checks_maps
+
+    # basic
+    $myhostname
+    $mynetworks
+    $max_servers: 同步執行的 Amavisd-new process 數量
+        - 必須與 /etc/postfix/master.cf 內的 amavisfeed 服務的 maxproc 欄吻合（請參閱下面的 Postfix 設定）
+    $daemon_user, $daemon_group
+        - 執行 Amavisd-new 的用戶及群組。
+    $inet_socket_port
+        - Amavisd-new recieve Postfix mail from which tcp port
+    $forward_method = 'smtp:127.0.0.1:10025';
+    $notify_method
+        - send mail back to Postfix
+
+    # SpamAssassin
+    $sa_spam_subject_tag = "[*****SPAM*****]"
+    $sa_tag_level_deflt
+    $sa_tag2_level_deflt
+    $sa_kill_level_deflt
+    $sa_mail_body_size_limit 
+    $sa_debug
+
+    # ClanAV
+    ['ClamAV-clamd',
+      \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd.sock"],
+      qr/\bOK$/, qr/\bFOUND$/,
+      qr/^.*?: (?!Infected Archive)(.*) FOUND$/ ],
+
+clamd.conf
+    LocalSocket /var/run/clamav/clamd.sock
+
+main.cf
+    content_filter = smtp-amavis:[127.0.0.1]:10024
+
+master.cf
+    ...
+
+spamassassin rules
+    - /etc/mail/spamassassin/
+
+MTA <-> amavisd <-> Clanav or SpamAssassin
+
+testing
++++++++
+- telnet $domain 10024/10025 (all smtp)
+- EICAR for anti-virus
+- GTUBE for anti-spam
+
+ref
++++
+http://wiki.centos.org/zh-tw/HowTos/Amavisd
+http://www.ijs.si/software/amavisd/
+
+
+Greylist, SPF, procmail
+-----------------------
+
+- Greylist
+    - When recieve SMTP 4xx response
+        - MTA will retry later, spam program will send another mail
+    - Reply 4xx for first (recipient, client-ip) pair, allow retrial after a period time (5 - 20 min)
+
+- SPF framework
+    - Domain Admin claim which mail server can be used in this domain.
+    - DNS TXT record
+    - examples
+        - dig cs.nctu.edu.tw TXT
+        - dig gmail.com TXT
+            - dig netblocks.google.com TXT
+
+- postgrey
+    - http://blog.miniasp.com/post/2010/06/16/Postfix-Greylisting-Policy-Server-postgrey.aspx
+    - rc.conf (enable + flag for socket)
+
+- procmail(MDA filter)
+    - http://linux.vbird.org/linux_server/0380sendmail.php#security_procmail
+    - http://linux.vbird.org/linux_server/0390postfix.php#secure_procmail
+    - postfix: main.cf
+        - mailbox_command = /usr/bin/procmail
+    - /usr/local/etc/procmailrc

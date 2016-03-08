@@ -1,0 +1,19 @@
+# 1. sec.name mapping (ip, community)
+com2sec naro bsd1~6 narouser
+com2sec narw bsd1~6 narwuser
+
+# 2. group name mapping (sec.model, sec.name)
+group naRoGroup v1 naro
+group naRoGroup v2c naro
+group naRoGroup usm naro
+group naRwGroup v1 narw
+group naRwGroup v2c narw
+group naRwGroup usm narw
+
+# 3. views for subset of MIB
+view  ip       included  .1.3.6.1.2.1.25.3.2.1.3  80
+view  contact  included  .1.3.6.1.2.1.1.4.0       80
+
+# 4. access mode: group => (read_views, write_views)
+access naRoGroup ""  any  noauth  exact  ip       none     none
+access naRwGroup ""  any  noauth  exact  contact  contact  none

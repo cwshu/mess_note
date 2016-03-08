@@ -1,0 +1,16 @@
+- deamon: named(bind)
+
+- /etc/rc.conf::
+
+    named_enable="YES"
+
+- rndc {stop|start|reload}
+
+- /etc/named/named.conf
+    - role of name server: master, slave, stub
+    - global conf
+    - zone specific
+
+- DNS records
+    - resource record(RR)
+    - parsing command

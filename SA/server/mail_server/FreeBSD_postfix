@@ -1,0 +1,30 @@
+ports
+    /usr/ports/mail/postfix
+    /usr/ports/security/cyrus-sasl2
+    /usr/ports/security/cyrus-sasl2-saslauthd
+
+setting files
+    /usr/local/etc/postfix/main.cf
+    /usr/local/lib/sasl2/smtpd.conf
+
+rc.conf
+    開機自動啟動, sendmail default 關閉.
+    sendmail_enable="NO"
+    postfix_enable="YES"
+    saslauthd_enable="YES"
+
+.../rc.d/saslauthd.sh
+
+
+sendmail_enable="NO"
+sendmail_submit_enable="NO"
+sendmail_outbound_enable="NO"
+sendmail_msp_queue_enable="NO"
+
+postfix_enable="YES"
+
+dovecot_enable="YES"
+dovecot_config="/usr/local/etc/dovecot/dovecot.conf"
+
+amavisd_enable="YES"
+spamd_enable="YES"

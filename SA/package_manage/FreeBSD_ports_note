@@ -1,0 +1,40 @@
+ports 可以管理你對軟體的修改 (patch)
+
+port: 移植
+ports collection: 解壓縮之後是一個目錄
+
+ports 裡,
+distinct: 檢查碼, 是否毀損
+pkg-descr: 
+
+官方主要己改成 portsnap
+CVSup:
+Portsnap:
+取得的 snapshot 是定時產生, 所以可能不是最新的.
+ex. 1 小時產生一次
+
+ports collection 不含原始碼, 裡面檔案只告訴你 source code 在哪抓.
+
+make fetchindex 抓 index
+make search name="..."
+port maintainer: 負責維護該 port, 不一定為該 port 發明人
+
+# 會將 all port 都裝一遍!!
+cd /usr/port
+make install clean
+
+/etc/make.conf
+
+pkg_add xxx.tbz # 先抓下來後下該指令安裝
+pkg_add -r xxx # 從網路上抓下來安裝
+
+var/db/pkg
+
+portmaster
+
+portmaster -aBdw # 比對 port tree 跟 你安裝好的軟體, so 請先更新 port collection
+-w 避免一些更新後軟體不能用的狀況
+
+Ports 更新
+
+移除技巧
