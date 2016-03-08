@@ -62,8 +62,14 @@ ffmpeg user manual: http://ffmpeg.org/ffmpeg.html
 ffmpeg MP3 encoding guide: https://trac.ffmpeg.org/wiki/Encode/MP3
 ffmpeg windows build: http://ffmpeg.zeranoe.com/builds/
 
+cut video: http://stackoverflow.com/questions/18444194/cutting-the-videos-based-on-start-and-end-time-using-ffmpeg
+
 Issue
 -----
 - [14.04] Ubuntu use ffmpeg forked: libav(avconv)
 - [14.04] Ubuntu's libmp3lame (mp3 encoder): libavcodec-extra-53
+
+Other video tools
+-----------------
+1. openshot: video editor, GUI and video emulation interface.
 

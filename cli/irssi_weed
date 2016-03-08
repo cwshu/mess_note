@@ -1,0 +1,25 @@
+https://github.com/ronilaukkarinen/weed
+
+1. backup .irssi/
+2. git clone https://github.com/ronilaukkarinen/weed.git weed-master
+3. weed-master/weed.theme, weed-master/scripts/* ::
+
+    cp ~/weed-master/weed.theme ~/.irssi/
+    mkdir -p ~/.irssi/scripts && cp ~/weed-master/scripts/* ~/.irssi/scripts/
+
+4. config
+
+    cp ~/weed-master/config ~/.irssi/
+    # add self infomation
+
+5. irssi reload
+
+    [in irssi] /reload
+
+6. More feature
+
+    /script load awl
+    /script load usercount.pl
+        /sbar awl_0 add -before awl_0 -alignment left usercount
+    /script load nicklist
+        /nicklist screen

@@ -1,0 +1,3 @@
+mount device dir
+mount [-t fstype] device dir
+mount [-t fstype] [-o options] device dir
