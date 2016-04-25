@@ -5,10 +5,6 @@ kvm
   vm => regular linux process, scheduled by standard linux scheduler
   more precisely, each vcpu appear as single linux process.
 
-- security
-
-  SVirt: SELinux and kvm virtualization
-
 - memory management
 
   - [Intel] Extended Page Table(EPT) & [AMD] Rapid Virtualization Indexing
@@ -23,11 +19,20 @@ kvm
       - ESXi: Transparent Page Sharing
       - XEN: Memory COW
 
+- interrupt and IO
 
-- reading
+  - KVM PCIe/MSI Passthrough on ARM/ARM64: http://www.linaro.org/blog/core-dump/kvm-pciemsi-passthrough-armarm64/
 
-  - http://www.ibm.com/developerworks/cloud/library/cl-hypervisorcompare-kvm/
+- security
 
-- unread
+  SVirt: SELinux and kvm virtualization
 
-  - `IBM developer - Anatomy of Linux hypervisor <http://www.ibm.com/developerworks/linux/library/l-hypervisor>`_
+- ARMv8.1 VHE(Virtualization Host Extension) 
+
+  - https://hkg15.pathable.com/static/attachments/112961/1424963684.pdf?1424963684
+
+Misc
+~~~~
+
+- http://www.ibm.com/developerworks/cloud/library/cl-hypervisorcompare-kvm/
+- `IBM developer - Anatomy of Linux hypervisor <http://www.ibm.com/developerworks/linux/library/l-hypervisor>`_
