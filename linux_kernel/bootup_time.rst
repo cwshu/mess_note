@@ -5,6 +5,6 @@ from FB club - Taiwan Linux Kernel Hacker: https://www.facebook.com/groups/twlin
 - https://wiki.debian.org/BootProcessSpeedup
 - systemd analyze startup time of each service::
 
-  systemd-analyze blame
-  systemd-analyze plot > a.svg 
+    systemd-analyze blame
+    systemd-analyze plot > a.svg 
 
