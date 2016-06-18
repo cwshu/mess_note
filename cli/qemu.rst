@@ -38,6 +38,13 @@ redirection example::
 
 [not reading] https://people.gnome.org/~markmc/qemu-networking.html
 
+mechanism
+~~~~~~~~~
+- usermode
+
+  1. emulated NIC provided to guest
+  2. network backend in host (put guest packets onto host's network)
+
 block device
 ------------
 - ``-drive``, ``-hda``, ``-cdrom``
@@ -52,6 +59,23 @@ block device
        qemu-system-i386 -drive file=<file>,index=1,media=disk
        qemu-system-i386 -drive file=<file>,index=2,media=disk
        qemu-system-i386 -drive file=<file>,index=3,media=disk
+
+
+remote control
+--------------
+
+qemu VM using spice
+
+- qemu VM (server)
+
+  - ``qemu-system-x86_64 -enable-kvm -hda ubuntu_14_04_3.qcow2 -vga qxl -spice port=45900,disable-ticketing``
+  - ``qemu-system-x86_64 -enable-kvm -hda ubuntu_14_04_3.qcow2 -vga qxl -spice port=45900,addr=127.0.0.1,disable-ticketing``
+  - ``qemu-system-x86_64 -enable-kvm -hda ubuntu_14_04_3.qcow2 -vga qxl -spice port=45900,password=<secret>``
+
+- client (gtk-based)
+
+  - ``spicy -h <host> -p <port>``
+
 
 monitor mode
 ------------
@@ -93,3 +117,8 @@ examples:
 
     qemu-img create -f raw xxx.img 1G
     qemu-img convert -f raw -O qcow2 xxx.img xxx.qcow2
+
+Misc
+----
+QEMU + GDB debug linux 0.11: https://wwssllabcd.github.io/blog/2012/08/03/compile-linux011/
+
