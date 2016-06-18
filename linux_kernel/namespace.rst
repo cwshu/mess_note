@@ -1,3 +1,7 @@
+- system calls: clone(), unshare(), setns()
+- /proc/ files
+
+
 Mount Namespace
 ---------------
 different mount point in different namespace
