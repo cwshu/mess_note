@@ -1,0 +1,9 @@
+- makefile based
+
+- overview
+  
+  - makefile
+  - .config
+  - arch make
+  - kbuild make (subsystem, kernel module)
+  - scripts/Makefile.* (makefile rules)
