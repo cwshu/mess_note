@@ -78,7 +78,11 @@ reference
 
 - Python threads: Dive into GIL! (PyCon 2011): https://in.pycon.org/2011/static/files/talks/41/Python-threads_v1.0.pdf
 - Larry Hastings - Removing Python's GIL: The Gilectomy - PyCon 2016: https://www.youtube.com/watch?v=P3AyI_u66Bw
-- PyPy-stm: http://doc.pypy.org/en/latest/stm.html#implementation
+- PyPy-stm
+
+  - http://doc.pypy.org/en/latest/stm.html#implementation
+  - pypy repo: ``pypy/doc/stm.rst``, https://github.com/tycho/pypy/blob/master/pypy/doc/stm.rst
+
 - https://wiki.python.org/moin/GlobalInterpreterLock
 
 Misc
