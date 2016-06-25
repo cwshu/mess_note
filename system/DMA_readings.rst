@@ -1,2 +1,0 @@
-- wiki: https://www.wikiwand.com/zh-tw/%E7%9B%B4%E6%8E%A5%E8%A8%98%E6%86%B6%E9%AB%94%E5%AD%98%E5%8F%96
-- LDD ch13: http://www.xml.com/ldd/chapter/book/ch13.html
