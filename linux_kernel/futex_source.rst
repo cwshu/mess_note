@@ -1,0 +1,2 @@
+- (NUMA) futexes and hash table collisions: http://blog.stgolabs.net/2014/01/futexes-and-hash-table-collisions.html
+- process private futex: http://lwn.net/Articles/229668/
