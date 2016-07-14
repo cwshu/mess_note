@@ -33,3 +33,9 @@ reference
 
 - ``man journalctl``
 - ``man systemd-journald.service``
+
+More
+~~~~
+
+- systemd Journal: https://linuxtoy.org/archives/systemd-journal.html?cm_mc_uid=35417870122914266652479&cm_mc_sid_50200000=1468074103
+- How To Use Journalctl to View and Manipulate Systemd Logs: https://www.digitalocean.com/community/tutorials/how-to-use-journalctl-to-view-and-manipulate-systemd-logs
