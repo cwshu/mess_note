@@ -8,7 +8,7 @@ ip link set <if> up
 ip route add default via 172.18.1.1
 
 sysctl net.ipv4.ip_forward=1
-iptables -t nat -A POSTFORWARD -s 172.18.1/24 -d 0.0.0.0/0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.18.1/24 -d 0.0.0.0/0 -j MASQUERADE
 iptables -t nat -nL # show state
 
 
