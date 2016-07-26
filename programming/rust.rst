@@ -56,3 +56,17 @@
     - lifetime annotations and the function signatures
     - switch the reference to one object: need to "move" the owner.
     - two reference of one object: "borrow"
+
+Misc
+----
+- Why Rust for Low-level Linux programming?: http://groveronline.com/2016/06/why-rust-for-low-level-linux-programming/
+- [Software Engineer Daily Podcast] 由 Steve Klabnik 介紹 Rust: https://www.facebook.com/groups/857846870916793/permalink/1191448607556616/
+
+- Rust vs C/C++ Pitfalls: http://www.garin.io/rust-vs-c-pitfalls
+- Rust recursive structure: http://yodalee.blogspot.tw/2016/03/rust-recursive-structure.html
+- & vs. ref in Rust patterns: http://xion.io/post/code/rust-patterns-ref.html#fnref:2
+- Rust Borrow and Lifetimes: https://www.facebook.com/groups/857846870916793/permalink/1193541934013950/
+- Dropbox 分享他們怎麼用 Rust: https://www.facebook.com/groups/857846870916793/permalink/1213125188722291/
+- Baby Steps: Slowly Porting musl to Rust: http://blog.adamperry.me/rust/2016/06/11/baby-steps-porting-musl-to-rust/
+
+- Rust 讀書會筆記(mozilla, 2016/07/26): https://gist.github.com/caasi/99064e12e7cf0a3c32c87e9276d1f6fe
