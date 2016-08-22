@@ -34,5 +34,3 @@ kvm
 Misc
 ~~~~
 
-- http://www.ibm.com/developerworks/cloud/library/cl-hypervisorcompare-kvm/
-- `IBM developer - Anatomy of Linux hypervisor <http://www.ibm.com/developerworks/linux/library/l-hypervisor>`_

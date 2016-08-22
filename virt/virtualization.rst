@@ -11,8 +11,10 @@ virtualization basic
 
   - privileged instruction
 
-intel VT series
----------------
+x86 hardware-assisted virtualization
+------------------------------------
+intel VT series, intel VMX ...
+
 - intel VT-x and VT-i: VT for x86 and itanium(IA 64)
 - intel VT-d: Virtualization of Direct IO
 
@@ -34,10 +36,19 @@ intel VT series
 
 - More
 
-  - Page Table Virtualization
+  - network: SR-IOV (maybe in the VT-d)
+  - graphic: 
+  
+    - GPU virtualization: Intel GVT-* series, GVT-g is the most general solution currently (support at most 7 VM).
 
-    - VPIDs(vcpu id), EPT.
+      - GPU mediated pass through at 2014 Usenix ATC, `note <../paper/GPU_virtualization_mediated_pass_through.rst>`_
 
+  - nested virtualization
+
+    - nested kvm is ok: https://wiki.archlinux.org/index.php/KVM#Nested_virtualization
+
+internal
+~~~~~~~~
 - trap in Hardware Assisted Virtualization
   
   - http://pages.cs.wisc.edu/~remzi/OSTEP/vmm-intro.pdf
@@ -46,7 +57,7 @@ ref
 +++
 - intel VT instructions: 
 
-  - http://linasm.sourceforge.net/docs/instructions/vme.php
+  - http://linasm.sourceforge.net/docs/instructions/vmx.php
   - http://virtualizationtechnologyvt.blogspot.tw/2009/04/vmx-instructions-in-x86.html
 
 - Advanced x86: Intel Hardware Assisted Virtualization Slides
