@@ -2,17 +2,26 @@ kvm
 ---
 - cpu 
 
-  vm => regular linux process, scheduled by standard linux scheduler
-  more precisely, each vcpu appear as single linux process.
+  - VM => regular linux process, scheduled by standard linux scheduler
+  - more precisely, each vcpu appear as single linux process.
 
 - memory management
 
-  - [Intel] Extended Page Table(EPT) & [AMD] Rapid Virtualization Indexing
+  - SLAT: Second Level Address Translation
+    
+    - [Intel] Extended Page Table(EPT)
+    - [AMD] Rapid Virtualization Indexing
+    - [ARM] Stage 2 Translation
+
   - kernel feature: Kernel Same-page Merging (KSM)
 
-    - 把 VM 間的 same memory page merge 到同一個 physical page, 用於節省 memory, 同時開啟更多 VM.
+    - 如果兩個 VM 有相同的 memory page, KSM 可以把兩個 VM 的 memory page 指到同一個 physical page, 減少 physical memory 的使用.
     - ksmd(daemon) 定期掃描比對跟 merge
-    - 比對法: http://blog.csdn.net/summer_liuwei/article/details/6013255, http://www.ibm.com/developerworks/linux/library/l-kernel-shared-memory/index.html
+    - 比對 algorithm:
+    
+      - http://blog.csdn.net/summer_liuwei/article/details/6013255
+      - http://www.ibm.com/developerworks/linux/library/l-kernel-shared-memory/index.html
+
     - source: ``./mm/ksm.c``
     - in other system
 
@@ -25,7 +34,7 @@ kvm
 
 - security
 
-  SVirt: SELinux and kvm virtualization
+  - SVirt: SELinux and kvm virtualization
 
 - ARMv8.1 VHE(Virtualization Host Extension) 
 
