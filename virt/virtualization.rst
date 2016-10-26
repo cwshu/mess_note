@@ -13,53 +13,13 @@ virtualization basic
 
 x86 hardware-assisted virtualization
 ------------------------------------
-intel VT series, intel VMX ...
+index: ./x86/intro.rst
 
 - intel VT-x and VT-i: VT for x86 and itanium(IA 64)
 - intel VT-d: Virtualization of Direct IO
-
-- VT-x
-
-  - two forms
-  - VMX root operation and non-root operation
-  - EPT(Extended Page Tables): page table virtualization
-  - VMCS(Virtual machine control structure) shadowing accelerates nested virtualization
-
-- VT-d 
-  
-  - DMA remapping
-  - DMA 相關問題
-  
-      DMA 發出的中斷為 MSI(message signaled interrupt), MSI 中要含有 device 的 memory address.
-      如果要虛擬化, DMA 就要可以 access host + all vm 的 memory address, 隔離效果不好.
-      解法: interrupt remapping: MSI 改成放 message id, 維護一個 message id to VM 區域的 table
-
-- More
-
-  - network: SR-IOV (maybe in the VT-d)
-  - graphic: 
-  
-    - GPU virtualization: Intel GVT-* series, GVT-g is the most general solution currently (support at most 7 VM).
-
-      - GPU mediated pass through at 2014 Usenix ATC, `note <../paper/GPU_virtualization_mediated_pass_through.rst>`_
-
-  - nested virtualization
-
-    - nested kvm is ok: https://wiki.archlinux.org/index.php/KVM#Nested_virtualization
 
 internal
 ~~~~~~~~
 - trap in Hardware Assisted Virtualization
   
   - http://pages.cs.wisc.edu/~remzi/OSTEP/vmm-intro.pdf
-
-ref
-+++
-- intel VT instructions: 
-
-  - http://linasm.sourceforge.net/docs/instructions/vmx.php
-  - http://virtualizationtechnologyvt.blogspot.tw/2009/04/vmx-instructions-in-x86.html
-
-- Advanced x86: Intel Hardware Assisted Virtualization Slides
-  
-  - https://drive.google.com/folderview?pli=1&ddrp=1&id=0B25hHW4ATym7Z1pTUUs0cEhOMHc
