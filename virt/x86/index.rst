@@ -14,6 +14,7 @@ Guide
   - [13] VMCS shadowing: accelerate nested virtualization of VMMs. The techique like shadow page table.
   
     - https://www-ssl.intel.com/content/dam/www/public/us/en/documents/white-papers/intel-vmcs-shadowing-paper.pdf
+    - ``Documentation/virtual/kvm/nested-vmx.txt``, The Turtles Project (OSDI 10): https://www.kernel.org/doc/Documentation/virtual/kvm/nested-vmx.txt
 
 - [12] intel APICv
 
@@ -30,9 +31,11 @@ Guide
 
   - GVT-d: direct passthrough, assign GPU to single VM
   - GVT-g: mediate passthrough: share GPU to multiple VM, command rendering using time-sharing, every VM allocate dedicated frame buffer (ballooning for security)
+
+    - GVT-g/mediate passthrough: Usenix ATC 14
+
   - GVT-s: API forwarding, para-virtualization
   - https://01.org/blogs/skjain/2014/intel%C2%AE-graphics-virtualization-update
-  - GVT-g/mediate passthrough: Usenix ATC 14
 
 - intel network virtualization
 
@@ -48,3 +51,13 @@ Guide
 - interesting
 
   - x86_64 因為不支援 segmentation, 所以要做純 software emulation 有困難. (Qemu?)
+
+ref
++++
+- intel VT instructions: 
+
+  - http://linasm.sourceforge.net/docs/instructions/vmx.php
+  - http://virtualizationtechnologyvt.blogspot.tw/2009/04/vmx-instructions-in-x86.html
+
+- Advanced x86: Intel Hardware Assisted Virtualization Slides: https://drive.google.com/folderview?pli=1&ddrp=1&id=0B25hHW4ATym7Z1pTUUs0cEhOMHc
+- Intel Developer Manual Volume 3, Ch20 ~ Ch29

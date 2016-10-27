@@ -39,7 +39,12 @@ kvm
 - ARMv8.1 VHE(Virtualization Host Extension) 
 
   - https://hkg15.pathable.com/static/attachments/112961/1424963684.pdf?1424963684
+  - Linaro Connect 16: http://connect.linaro.org/resource/bkk16/bkk16-504/
 
 Misc
 ~~~~
+
+Reference
+---------
+- Architecture of the Kernel-based Virtual Machine(KVM): https://drive.google.com/drive/u/0/folders/0B25hHW4ATym7akZlWTk1ejFGWmM
 
