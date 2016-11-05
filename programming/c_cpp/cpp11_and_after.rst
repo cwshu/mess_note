@@ -9,9 +9,20 @@ Type Deduction/Template
 - [C++11] auto type
 - [C++11] foreach (range-based for)
 - [C++11] initializer
+
   - map<int, char> m = {{1, 'a'}, {3, 'b'}, {5, 'c'}, {7, 'd'}};
 
-- C++11 嘴砲：auto, decltype, trailing-return type: http://tommyjswu-blog.logdown.com/posts/736924-c-11-mouth-cannon-auto
+- C++11 嘴砲: auto, decltype, trailing-return type: http://tommyjswu-blog.logdown.com/posts/736924-c-11-mouth-cannon-auto
+
+Alias
+-----
+- type alias, like typedef: ``using size_t = int``
+- alias template, typedef for template type: 
+
+  - define: ``template <class T> vector_2d = std::vector<std::vector<T>>;``
+  - use:    ``vector_2d<int> matrix;``
+
+- namespace template: like python ``import as``
 
 Rvalue Reference
 ----------------
