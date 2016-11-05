@@ -22,5 +22,3 @@
 - in_addr_t inet_lnaof(struct in_addr in);
 - in_addr_t inet_netof(struct in_addr in);
   - struct in_addr => uint32_t (host byte)
-
-
