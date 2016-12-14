@@ -1,29 +1,29 @@
 Today, I open my virtualbox guest VM (centos7).
 
-.. image:: vbox_hanging_pic/vbox_init.png
+.. image:: image/vbox_hanging/vbox_init.png
 
 when opening it, hanging at 0% process and has 2 window in my GUI.
 
-.. image:: vbox_hanging_pic/centos7_hang2.png
+.. image:: image/vbox_hanging/centos7_hang2.png
 
 .
 
-.. image:: vbox_hanging_pic/centos7_hang.png
+.. image:: image/vbox_hanging/centos7_hang.png
 
 Then, I views the process tree by htop, to check if I open two guest VM simultaneously to make it hanging.
 
-.. image:: vbox_hanging_pic/htop_vbox.png
+.. image:: image/vbox_hanging/htop_vbox.png
 
 Obviously, I has just one guest VM, so I try to see what it does.
 I use ``strace -p <pid>`` to see the system call this process calling now.(attach this process)
 
-.. image:: vbox_hanging_pic/strace_vbox.png
+.. image:: image/vbox_hanging/strace_vbox.png
 
 E_AGAIN mean I read the non-blocking socket, and if this socket is blocking and you read it, it will hanging.
 So, I try to know what is file descritor 16, 17, 22 is in guest VM process.
 I use ``lsof -p <pid>`` to see the file descritors of process.
 
-.. image:: vbox_hanging_pic/lsof_vbox.png
+.. image:: image/vbox_hanging/lsof_vbox.png
 
 and now, I want know how to see the two end of unix socket. Then I can guest why this unix socket doesn't reply any message.
 
@@ -72,6 +72,6 @@ Misc
 ----
 - ``strace -c`` is profiling every system call time consuming.
 
-.. image:: vbox_hanging_pic/strace_c_vbox.png
+.. image:: image/vbox_hanging/strace_c_vbox.png
 
 - http://www.hokstad.com/5-simple-ways-to-troubleshoot-using-strace

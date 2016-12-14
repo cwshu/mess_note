@@ -1,7 +1,7 @@
 - hime/gnome-terminal bug
 - aur => local
 
-.. image:: aur_local1.png
+.. image:: image/aur_local1.png
 
 - first, local repo?? Custom local repository?
 
