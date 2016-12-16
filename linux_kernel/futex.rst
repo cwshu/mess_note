@@ -41,7 +41,7 @@ hash table of many wait queues
 - 處理任意數量的 mutex lock: 多個 wait queue, 並且以 lock variable 的 memory address(uaddr) 為 unique hash key 來尋找對應的 wait queue.
 - 256 buckets 的 hash table, hash collision 的解法類似使用 linked list 的 chaining.
 
-.. image:: dvh-futexes.png
+.. image:: image/dvh-futexes.png
 
 ----
 
