@@ -68,6 +68,36 @@ example memory types setting:
 
     .. image:: img/set_mem_type.png
 
+example of MTRR and PAT in Linux::
+
+    # MTRR
+    $ cat /proc/mtrr
+    reg00: base=0x000000000 (    0MB), size= 8192MB, count=1: write-back
+    reg01: base=0x200000000 ( 8192MB), size= 4096MB, count=1: write-back
+    reg02: base=0x300000000 (12288MB), size= 1024MB, count=1: write-back
+    reg03: base=0x0e0000000 ( 3584MB), size=  512MB, count=1: uncachable
+    reg04: base=0x0d0000000 ( 3328MB), size=  256MB, count=1: uncachable
+    reg05: base=0x0ce000000 ( 3296MB), size=   32MB, count=1: uncachable
+    reg06: base=0x0cd000000 ( 3280MB), size=   16MB, count=1: uncachable
+    reg07: base=0x330000000 (13056MB), size=  256MB, count=1: uncachable
+    reg08: base=0x32f000000 (13040MB), size=   16MB, count=1: uncachable
+    reg09: base=0x32ee00000 (13038MB), size=    2MB, count=1: uncachable
+
+    # PAT
+    # p.s. debugfs interface may be not stable
+    $ cat /sys/kernel/debug/x86/pat_memtype_list 
+    PAT memtype list:
+    write-back @ 0xc8fd9000-0xc8fe9000
+    write-back @ 0xc8fe8000-0xc8fea000
+    write-back @ 0xc8fe9000-0xc8feb000
+    ...
+    write-combining @ 0xd0000000-0xe0000000
+    write-combining @ 0xe0000000-0xe0001000
+    uncached-minus @ 0xe0001000-0xe0002000
+    uncached-minus @ 0xe0002000-0xe0003000
+    ...
+
+
 
 Example
 -------
