@@ -12,14 +12,14 @@ quick
     qemu-img create -f qcow2 test.qcow2 20G
 
     # installation OS to test.qcow2
-    qemu-system-x86_64 -enable-kvm -m 2G -cdrom ArchLinux.iso -hda test.qcow2 -boot order=d 
+    qemu-system-x86_64 -enable-kvm -smp 2 -m 2G \
+    -cdrom ArchLinux.iso -hda test.qcow2 -boot order=d 
 
     # running VM: test.qcow2
-    qemu -enable-kvm -cpu host -smp 2 -m 1G \
+    qemu-system-x86_64 -enable-kvm -smp 2 -m 2G \
     -hda test.qcow2 \
     -netdev user,id=net0,hostfwd=tcp:127.0.0.1:50022-:22 \
     -device e1000,netdev=net0 \
-    -vga std \
     -monitor telnet:0.0.0.0:60023,server,nowait 
 
 network
