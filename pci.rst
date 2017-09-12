@@ -71,12 +71,12 @@ Architecture
 PCIe Bus Topology:
 
 .. image:: image/pci/pcie_topology.png
-   :scale: 70%
+   :scale: 50%
 
 PCI Bus Topology:
 
 .. image:: image/pci/pci_topology.png
-   :scale: 70%
+   :scale: 50%
 
 - Shared parallel bus architecture: PCI host and all devices share a common set of (address, data and control lines). 
 - p2p topology
