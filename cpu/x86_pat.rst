@@ -28,9 +28,12 @@ cache control registers and bits
 
   .. image:: img/x86_cache_control_regs_bits.png
 
-example memory types setting:
+example of memory type setting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    .. image:: img/set_mem_type.png
+setting memory types by PAT and MTRR.
+
+  .. image:: img/set_mem_type.png
 
 Linux support
 -------------
