@@ -5,10 +5,11 @@ version 1::
 
     systemd-nspawn -bD/var/lib/lxc/arch1/rootfs -n
     
-    # in container
+    # host
     ip addr add 172.18.1.1/24 dev <if>
     ip link set <if> up
     
+    # in container
     ip addr add 172.18.1.2/24 dev <if>
     ip link set <if> up
     ip route add default via 172.18.1.1
