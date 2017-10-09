@@ -38,13 +38,13 @@ operations
 ----------------------
 - git reflog
 
-  - http://ithelp.ithome.com.tw/articles/10138150
-  - https://git-scm.com/book/zh-tw/v1/Git-%E5%85%A7%E9%83%A8%E5%8E%9F%E7%90%86-%E7%B6%AD%E8%AD%B7%E5%8F%8A%E8%B3%87%E6%96%99%E5%BE%A9%E5%8E%9F
+  - `30 天精通 Git 版本控管 (16)：善用版本日誌 git reflog 追蹤變更軌跡 <http://ithelp.ithome.com.tw/articles/10138150>`_
+  - `Gitbook ch9.7: Git Internals - Maintenance and Data Recovery <https://git-scm.com/book/zh-tw/v1/Git-%E5%85%A7%E9%83%A8%E5%8E%9F%E7%90%86-%E7%B6%AD%E8%AD%B7%E5%8F%8A%E8%B3%87%E6%96%99%E5%BE%A9%E5%8E%9F>`_
 
 - git refs
 
   - .git/refs/heads/, remotes/, tags/
-  - `Git Internals - Git References <https://git-scm.com/book/zh-tw/v2/Git-Internals-Git-References>`_
+  - `Gitbook v2 Ch10.3: Git Internals - Git References <https://git-scm.com/book/zh-tw/v2/Git-Internals-Git-References>`_
   - `git show-ref <http://git-scm.com/docs/git-show-ref>`_
 
 problems/use case
