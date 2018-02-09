@@ -1,7 +1,17 @@
+Cscope note
+===========
+
+cscope CLI options
+------------------
+
 generate file ``cscope.out`` at local directory.
+
+Basic Usage
 
 - ``find . -name "*.h" -o -name "*.c" -o -name "*.cpp" > cscope.files``
 - ``cscope -Rbkq cscope.files``
+
+More
 
 - ``-F<symfile>``: symbol file (symbol reference line)
 - ``-f<reffile>``: use ``<reffile>`` instead of ``cscope.out``
@@ -28,4 +38,18 @@ http://vimhelp.appspot.com/if_cscop.txt.html
     >> q
 
     # 1 is find definition, and 0 is find symbol
+
+Trouble Shooting
+----------------
+
+- use the cscope in the project we are developing.
+
+  - we update code after we generate cscope database.
+  - howto?
+
+      當你的 source code 有改變或是新增加檔案,
+      你就要將新增加的檔案加入到 cscope.files (步驟3),
+      然後再次重新 build 你的 database(步驟4).
+
+      參考: https://hamisme.blogspot.tw/2013/11/using-cscope-on-large-projects.html
 
