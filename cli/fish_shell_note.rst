@@ -1,7 +1,14 @@
 Fish Shell Notes
 ================
 
-- redirection: my google doc
+fish shell is non-POSIX compatible shell, so it has some different syntaxs to other shells.
+
+- command substitution: ``(<CMD>)``
+- IO redirection:
+
+  - to file: ``>, ^``
+  - to pipe: ``|, 2>|``
+
 - alias
 
   - ``function psa; ps -auxww; end``
@@ -10,16 +17,6 @@ Fish Shell Notes
 - environment variable
 
   - ``set -x LD_LIBRART_PATH (pwd)``
+  - inline: ``env LD_LIBRART_PATH=(pwd) <CMD>`` (use ``env`` program)
 
-- inline environment variable
 
-  - by ``env`` program::
-
-      env LD_LIBRART_PATH=(pwd) <CMD>
-
-  - fish::
-
-      begin
-          set -lx LD_LIBRART_PATH (pwd)
-          <CMD>
-      end
