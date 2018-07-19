@@ -1,0 +1,70 @@
+APT note
+========
+
+- upgrade
+
+    - 更新所有已安裝的 package, 到最新版本, from /etc/apt/sources.list
+    - 但如果該 package 的升級, 如果需要 remove 一些套件, 則不會升級
+
+        - ex. dependency library 需要升級, 或是有新的 dependency, 該 dependency library 的不同版本已裝在本機上)
+- dist-upgrade
+
+    - 更新所有已安裝的 package, 到最新版本, from /etc/apt/sources.list
+    - 用 debian 自己的 algorithm 處理 dependency conflict 的問題.
+
+- remove
+
+    - remove:     移除 package + dependencies, 但留下設定檔
+    - purge:      移除 package + dependencies, 連設定檔一起移除
+    - autoremove: 移除當初因為 dependency 安裝, 但現在不再被別的 package depend 的 package.
+
+- clean
+
+    - 清掉安裝 package 時, 留下的暫存檔 (ex. deb), 除了 lock 檔.
+    - 為這 2 個 directory: /var/cache/apt/archives/, /var/cache/apt/archives/partial/
+
+- Misc
+
+    - autoclean
+    - download: download binary in current directory.
+    - check
+
+        - update package cache (apt-cache?)
+        - check broken dependency
+
+    - changelog: 去 server 抓 changelog
+
+圖示::
+
+                    寫下 remote url
+    |------------|  -------------->  |------------|
+    | 本機套件庫 |                   | 遠端套件庫 | 
+    |------------|  <--------------  |------------|
+                         update
+       |         
+       | install 
+       |                      
+       | upgrade/dist-upgrade 
+       v                      
+                              
+    |--------------| 
+    | 本機套件狀態 | 
+    |--------------| 
+    
+       | 
+       | remove/purge/autoremove
+       |
+       | clean/autoclean
+       v
+    
+     /dev/null (garbage)
+
+
+build from source
+-----------------
+
+- source: 把套件的 source 抓下來
+- build-dep
+
+    - 從 package 安裝/移出, 建立好該套件的 build dependency
+    - build-dep 預設是 native architecture, 如果需要 cross compile 可以下 --host-architecture
