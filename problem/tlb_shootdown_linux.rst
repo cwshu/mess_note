@@ -26,7 +26,12 @@
 
   - arm64 TLB management code?
 
-unmap_region()::
+Details
+
+- ``unmap_region()``
+
+  - syscall ``munmap()`` calls ``unmap_region()`` to unmap VMA.
+  ::
 
     - unmap_region()
       - tlb_gather_mmu() => __tlb_reset_range()
