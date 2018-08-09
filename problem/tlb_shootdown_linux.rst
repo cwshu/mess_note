@@ -1,11 +1,3 @@
-- [RFC PATCH 2/2] ARMv7: Invalidate the TLB before freeing page tables: http://lists.infradead.org/pipermail/linux-arm-kernel/2011-February/042029.html
-
-  - 看起來似乎是 speculative execution 造成 TLB invalidating 必須要比 freeing page table 來的早, 不然就有機會拿到舊的 TLB entry 來執行.
-  - how x86 handle TLB flush: ``include/asm-generic/tlb.h``, ``arch/x86/include/asm/tlb.h``
-  - TLB shootdown code is supposed to make this more efficient than 
-    having to issue a broadcasted TLB invalidate for every page as we remove each one in sequence?
-  - tlb_remove_page(), zap_pte_range(), tlb_end_vma()
-
 - Context switch and TLB: http://www.wowotech.net/process_management/context-switch-tlb.html
 
   - TLB 如果沒使用 ASID, context switch 時需要 flush local TLB entries
@@ -13,6 +5,14 @@
   - 反之, 使用 ASID 在 SMP 系統上, 可能會造成多餘的 TLB false sharing, 引發 TLB shootdown 降低效能.
   - context switch 到 linux kthread, 可以使用 lazy TLB mode 減少 TLB invalidation
   - ARM 的 TLB invalidate 指令似乎支援對 multi-core 使用(shared domain), 就不需要用 IPI 送 TLB invalidate 指令來給多 cpu core 執行.
+
+- [RFC PATCH 2/2] ARMv7: Invalidate the TLB before freeing page tables: http://lists.infradead.org/pipermail/linux-arm-kernel/2011-February/042029.html
+
+  - 看起來似乎是 speculative execution 造成 TLB invalidating 必須要比 freeing page table 來的早, 不然就有機會拿到舊的 TLB entry 來執行.
+  - how x86 handle TLB flush: ``include/asm-generic/tlb.h``, ``arch/x86/include/asm/tlb.h``
+  - TLB shootdown code is supposed to make this more efficient than 
+    having to issue a broadcasted TLB invalidate for every page as we remove each one in sequence?
+  - tlb_remove_page(), zap_pte_range(), tlb_end_vma()
 
 - linux-patches/tlb-shootdown-measurement: https://github.com/x-y-z/linux-patches/blob/master/tlb-shootdown-measurement/0003-tracing-add-a-reason-for-tracing-tlb-shootdown-initi.patch
 
@@ -50,3 +50,5 @@ Details
     - smp_call_function_many() + flush_tlb_func
 
     // mmu_notifier, mmu_notifier_op // implemented in ./drivers/iommu/{intel-svm.c, amd_iommu_v2.c}
+
+- smp IPI code reference to ``linux_kernel/smp.rst``
