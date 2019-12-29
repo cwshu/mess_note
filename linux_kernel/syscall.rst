@@ -1,33 +1,55 @@
-.. image:: syscall_routine.png
+Linux kernel system call
+========================
+
+trace of x86 system call
+------------------------
+
+.. image:: image/syscall_routine.png
 
 syscall table
 
-- source: ``arch/x86/entry/syscalls/`` => ``arch/x86/include/generated/asm`` & ``arch/x86/include/generated/uapi/asm``
-- x86_64 
+- source files::
+    
+    arch/x86/entry/syscalls/
 
-  - systbl: ``__SYSCALL_64(0, sys_read, )``
-  - syshdr: ``#define __NR_read 0``
+    => arch/x86/include/generated/asm
+       arch/x86/include/generated/uapi/asm
 
-- x86
+- APIs of systbl and syshdr::
 
-  - systbl: ``__SYSCALL_I386(0, sys_restart_syscall, )``
-  - syshdr: ``#define __NR_restart_syscall 0``
+    # x86_64 arch
+    systbl: __SYSCALL_64(0, sys_read, )
+    syshdr: #define __NR_read 0
 
-- hdr
+    # x86 arch
+    systbl: __SYSCALL_I386(0, sys_restart_syscall, )
+    syshdr: define __NR_restart_syscall 0
+
+- hdr::
   
-  - ``unistd_(32, 64, x32).h``
-  - ``unistd_64_x32.h, unistd_32_ia32.h``
+    unistd_(32, 64, x32).h
+    unistd_64_x32.h, unistd_32_ia32.h
 
-- tbl: ``syscalls_32.h``, ``syscalls_64.h`` (with X32 ABI) 
+- tbl::
+    
+    syscalls_32.h
+    syscalls_64.h (with X32 ABI) 
+
 - misc
 
   - ?? syscall number in libc: ``/usr/include/asm/unistd_(32, 64, x32).h``, from ``/usr/include/sys/syscall.h``
 
 syscall_entry
 
-- source: ``arch/x86/entry/``
+- source::
 
-  - x86_64: common.c, entry_64.S, syscall_64.c, thunk_64.S(thunk macro), calling.h
+    arch/x86/entry/
+      (x86_64)
+        common.c
+        entry_64.S
+        syscall_64.c
+        thunk_64.S (thunk macro)
+        calling.h
 
 - fast_path & slow_path
 
@@ -62,13 +84,14 @@ syscall define
 
 - source: ``include/linux/syscalls.h``
 
-  - SYSCALL_DEFINE<num>(), <num>: 為 system call 參數數量
+  - ``SYSCALL_DEFINE<num>()``, <num> 為 system call 的參數數量
 
-----
+System call ABI
+---------------
 
-http://wiki.osdev.org/SYSENTER
+notes of CPU instructions or ABI of the system call.
 
-SYSENTER/SYSEXIT
+Intel: SYSENTER/SYSEXIT
 
 - sysenter::
 
@@ -84,7 +107,7 @@ SYSENTER/SYSEXIT
     CS  <= IA32_SYSENTER_CS + 16
     SS  <= IA32_SYSENTER_CS + 24
 
-SYSCALL/SYSRET
+AMD: SYSCALL/SYSRET
 
 - syscall::
 
@@ -103,6 +126,7 @@ SYSCALL/SYSRET
 
 Ref
 ---
+
 - http://www.cs.columbia.edu/~jae/4118-LAST/L10-syscall.pdf
 
 - Anatomy of a system call, part 1: https://lwn.net/Articles/604287/
